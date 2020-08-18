@@ -48,7 +48,7 @@ K1=K1(1:len);
  Shar11=outliers1(Shar);
  
  
-%patch(I,'EdgeColor','none','FaceColor','interp','FaceVertexCData',Shar1);colorbar;
+patch(I,'EdgeColor','none','FaceColor','interp','FaceVertexCData',Shar1);colorbar;
 
 
  
