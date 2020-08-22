@@ -6,10 +6,11 @@ from typing import NamedTuple
 import scipy.ndimage as ndimage
 from skimage import measure
 import nibabel as nib
-
+from scipy.stats import describe
 
 # https://web.njit.edu/~rlopes/Mod5.2.pdf
 # https://docs.scipy.org/doc/numpy-1.13.0/reference/arrays.dtypes.html#arrays-dtypes-constructing
+
 
 class Curvature(NamedTuple):
     gaussian_curvature: np.ndarray
@@ -18,22 +19,40 @@ class Curvature(NamedTuple):
     principal_curvature_max: np.ndarray
 
     def __repr__(self):
-        return (f"Gaussian curvature: {self.gaussian_curvature.shape}\n"
-                f"Mean Curvature: {self.mean_curvature.shape}\n"
-                f"Principal Curvature Min: {self.principal_curvature_min.shape}\n"
-                f"Principal Curvature Max: {self.principal_curvature_max.shape}")
+        return (
+            f"Describe:\n"
+            f"Gaussian curvature: {describe(self.gaussian_curvature.flatten(),nan_policy='omit')}\n"
+            f"Mean Curvature: {describe(self.mean_curvature.flatten(),nan_policy='omit')}\n"
+            f"Principal Curvature Min: {describe(self.principal_curvature_min.flatten(),nan_policy='omit')}\n"
+            f"Principal Curvature Max: {describe(self.principal_curvature_max.flatten(),nan_policy='omit')}\n"
+
+            f"Shapes:\n"
+            f"Gaussian curvature: {self.gaussian_curvature.shape}\n"
+            f"Mean Curvature: {self.mean_curvature.shape}\n"
+            f"Principal Curvature Min: {self.principal_curvature_min.shape}\n"
+            f"Principal Curvature Max: {self.principal_curvature_max.shape}")
+
 
 class SurfaceMeasures(NamedTuple):
     curvedness: np.ndarray
     sharpness: np.ndarray
     shape_index: np.ndarray
     total_curvature: np.ndarray
-    
+
     def __repr__(self):
-        return (f"Curvedness:{self.curvedness.shape}\n"
+        return (
+                f"Describe:\n"
+                f"Curvedness:{describe(self.curvedness.flatten(),nan_policy='omit')}\n"
+                f"Sharpness:{describe(self.sharpness.flatten(),nan_policy='omit')}\n"
+                f"Shape Index:{describe(self.shape_index.flatten(),nan_policy='omit')}\n"
+                f"Total Curvature:{describe(self.total_curvature.flatten(),nan_policy='omit')}\n"
+
+                f"Shapes:\n"
+                f"Curvedness:{self.curvedness.shape}\n"
                 f"Sharpness:{self.sharpness.shape}\n"
                 f"Shape Index:{self.shape_index.shape}\n"
                 f"Total Curvature:{self.total_curvature.shape}")
+
 
 class MorphologyFeatures(NamedTuple):
     curvature: Curvature
@@ -42,6 +61,7 @@ class MorphologyFeatures(NamedTuple):
     def __repr__(self):
         return (f"Curvature:\n{self.curvature}\n"
                 f"Surface measures:\n{self.surface_measures}")
+
 
 def compute_curvature(X, Y, Z):
     """
@@ -120,7 +140,7 @@ def compute_curvature(X, Y, Z):
                           principal_curvature_min=Pmin)
     return curvature
 
-
+#todo: what does dim do? looks like its scalaing the meshgrid?
 def compute_morphology_features(mri_voxels: np.ndarray, dim: np.ndarray = np.array([1, 1, 1])):
     n2, n1, n3 = mri_voxels.shape
     d1, d2, d3 = dim[0], dim[1], dim[2]
@@ -171,6 +191,7 @@ def compute_morphology_features(mri_voxels: np.ndarray, dim: np.ndarray = np.arr
 def run(nii_path):
     img = nib.load(nii_path)
     mri_3d_voxels = img.get_fdata()
+    # mri_3d_voxels[mri_3d_voxels > 0] = 255
     response = compute_morphology_features(mri_3d_voxels)
     return response
 
