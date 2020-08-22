@@ -3,7 +3,7 @@ function [Measures, I]=SurfacePts(region,dim)
 [X,Y,Z] = meshgrid([1:n1].*dim(1),[1:n2].*dim(2),[1:n3].*dim(3));
 region1=smooth3(region);
 
-
+% todo: significance of 128??
 I=isosurface(X,Y,Z,region1,128);
 v=I.vertices;
 

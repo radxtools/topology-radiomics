@@ -3,3 +3,5 @@ scipy
 nibabel
 nilearn
 matplotlib
+itkwidgets
+scikit-image
