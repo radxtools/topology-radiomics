@@ -1,12 +1,12 @@
 from setuptools import setup
 
 setup(
-    name='bric-morphology',
-    version=TBD,
+    name='morphology',
+    version='TBD',
     author='Toth Technology',
     author_email='toth-tech@hillyer.me',
     description='Morphology Implementation',
-    long_description=long_description,
+    long_description='TBD',
     long_description_content_type='text/markdown',
     url='https://github.com/Toth-Technology/bric-morphologys',
     project_urls={
@@ -14,7 +14,7 @@ setup(
         'Docker Module': 'TBD',
         'Github': 'https://github.com/Toth-Technology/bric-morphologys'
     },
-    py_modules=['morphology'],
+    packages=['morphology'],
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Science/Research',
@@ -28,7 +28,6 @@ setup(
         'Topic :: Scientific/Engineering :: Bio-Informatics',
     ],
     install_requires=[
-        'numpy==1.19.0',
     ],
     python_requires='>=3.6',
     keywords='TBD',

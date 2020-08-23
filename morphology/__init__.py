@@ -54,9 +54,16 @@ class SurfaceMeasures(NamedTuple):
                 f"Total Curvature:{self.total_curvature.shape}")
 
 
+class Isosurface(NamedTuple):
+    verts : np.ndarray
+    faces: np.ndarray
+    normals: np.ndarray
+    values: np.ndarray
+
 class MorphologyFeatures(NamedTuple):
     curvature: Curvature
     surface_measures: SurfaceMeasures
+    isosurface: Isosurface
 
     def __repr__(self):
         return (f"Curvature:\n{self.curvature}\n"
@@ -148,13 +155,16 @@ def compute_morphology_features(mri_voxels: np.ndarray, dim: np.ndarray = np.arr
     ys = np.arange(n2) * d2
     zs = np.arange(n3) * d3
 
+    # do we need this, as the python function cant use this data?
     X, Y, Z = np.meshgrid(xs, ys, zs)
 
     # todo: is this equivalent to smooth3 in ocatve?
     smoothed_mri_voxels = ndimage.gaussian_filter(mri_voxels, sigma=3)
     # todo: is this equivalent to isosurface in matlab?
     verts, faces, normals, values = measure.marching_cubes(smoothed_mri_voxels)
+    _isosurface = Isosurface(verts, faces, normals, values)
 
+    #cieling square for verticies??
     dim = 0
     l = len(verts)
     for n in range(l//2):
@@ -163,7 +173,7 @@ def compute_morphology_features(mri_voxels: np.ndarray, dim: np.ndarray = np.arr
             break
 
     v1 = np.zeros((dim*dim, 3))
-    # todo - I dont think this is correct, will need to verify with matlab code
+    # todo - Verify this is correct with Rob Toth
     v1[0:l, :] = verts[0:l, :]
 
     XX = np.reshape(v1[:, 0], (dim, dim))
@@ -184,14 +194,15 @@ def compute_morphology_features(mri_voxels: np.ndarray, dim: np.ndarray = np.arr
 
     return MorphologyFeatures(
         curvature=_curvature,
-        surface_measures=_surface_measures
+        surface_measures=_surface_measures,
+        isosurface=_isosurface
     )
 
 
 def run(nii_path):
     img = nib.load(nii_path)
     mri_3d_voxels = img.get_fdata()
-    # mri_3d_voxels[mri_3d_voxels > 0] = 255
+    mri_3d_voxels[mri_3d_voxels > 0] = 255
     response = compute_morphology_features(mri_3d_voxels)
     return response
 
@@ -234,3 +245,13 @@ def run(nii_path):
 path = r"C:\Users\admin\bric-morphology\studies\1\data\Lesion.nii"
 d = run(path)
 print(d)
+
+
+# # %%
+# from itkwidgets import view
+
+# img = nib.load(path)
+# mri_3d_voxels = img.get_fdata()
+# mri_3d_voxels[mri_3d_voxels > 0] = 255
+
+# view(mri_3d_voxels)
