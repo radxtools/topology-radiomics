@@ -5,3 +5,5 @@ nilearn
 matplotlib
 itkwidgets
 scikit-image
+pyvista
+plotly
