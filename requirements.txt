@@ -1,9 +1,5 @@
 numpy
-scipy
 nibabel
-nilearn
-matplotlib
-itkwidgets
 scikit-image
 pyvista
 plotly
