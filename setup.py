@@ -12,7 +12,7 @@ setup(
     project_urls={
         'Docker Examples': 'TBD',
         'Docker Module': 'TBD',
-        'Github': 'https://github.com/Toth-Technology/bric-morphologys'
+        'Github': 'https://github.com/Toth-Technology/bric-morphology'
     },
     packages=['morphology'],
     classifiers=[
@@ -28,6 +28,9 @@ setup(
         'Topic :: Scientific/Engineering :: Bio-Informatics',
     ],
     install_requires=[
+        "numpy",
+        "scikit-image",
+        "pyvista",
     ],
     python_requires='>=3.6',
     keywords='TBD',

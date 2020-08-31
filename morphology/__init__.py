@@ -313,7 +313,10 @@ if __name__ == "__main__":
     try:
         import sys
         import nibabel as nib
-        nii_path = sys.argv[1]
+        from pkg_resources import resource_filename
+
+        nii_path = resource_filename("morphology", "data/Lesion.nii")
+        # nii_path = sys.argv[1]
         img = nib.load(nii_path)
         mri_3d_voxels = img.get_fdata()
         mri_3d_voxels[mri_3d_voxels > 0] = 255
