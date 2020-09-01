@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='morphology',
-    version='TBD',
+    version='0.0.0',
     author='Toth Technology',
     author_email='toth-tech@hillyer.me',
     description='Morphology Implementation',
@@ -32,6 +32,6 @@ setup(
         "scikit-image",
         "pyvista",
     ],
-    python_requires='>=3.6',
+    python_requires='>=3.8',
     keywords='TBD',
 )

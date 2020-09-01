@@ -16,7 +16,6 @@ class Curvature:
         returns:
             ndarray: Shape: (N,)
         """
-
         return self.gaussian_curvature
 
     def computed_mean_curvature(self) -> np.ndarray:
@@ -59,53 +58,13 @@ class Curvature:
             self.computed_principal_curvature_min(), "Principal Curvature Min")
         pmax = SummaryRow(
             self.computed_principal_curvature_max(), "Principal Curvature Max")
-        return "\n".join(map(str,[header, gauss, mean, pmin, pmax]))
+        return "\n".join(map(str, [header, gauss, mean, pmin, pmax]))
 
 
 class SurfaceMeasures:
     """
     Datam to hold Surface Measures
     """
-
-    def computed_curvedness(self) -> np.ndarray:
-        """Cache of curvedness for each vertex
-
-        Formulas is given as follows:
-            P1 = principal curvature minimum
-            P2 = principal curvature maximum
-            Curvedness       C = 5 * sqrt(P1^2 + P2^2)
-        """
-        return self.curvedness
-
-    def computed_sharpness(self) -> np.ndarray:
-        """Cache of sharpness for each vertex
-        
-        Formulas is given as follows:
-            P1 = principal curvature minimum
-            P2 = principal curvature maximum
-            Sharpness        S = (P2 - P1)^2
-        """
-        return self.sharpness
-
-    def computed_shape_index(self) -> np.ndarray:
-        """Cache of shape index for each vertex
-
-        Formulas is given as follows:
-            P1 = principal curvature minimum
-            P2 = principal curvature maximum
-            Shape Index     SI = 2/pi * arctan((P2 + P1) / (P1 - P2))
-            TODO: what to do when P1 - P2 = 0?
-        """
-        return self.shape_index
-
-    def computed_total_curvature(self) -> np.ndarray:
-        """Cache of total curvature for each vertex
-        Formulas is given as follows:
-            P1 = principal curvature minimum
-            P2 = principal curvature maximum
-            Total Curvature  K = abs(P1) + abs(P2)
-        """
-        return self.total_curvature
 
     def __init__(self,
                  curvedness: np.ndarray,
@@ -117,6 +76,73 @@ class SurfaceMeasures:
         self.shape_index = shape_index
         self.total_curvature = total_curvature
 
+    def computed_curvedness(self) -> np.ndarray:
+        """Cache of curvedness for each vertex
+
+        Formulas is given as follows:
+            P1 = principal curvature minimum
+            P2 = principal curvature maximum
+            Curvedness       C = 5 * sqrt(P1^2 + P2^2)
+
+            The curvedness (C) captures flat regions in the surface with low
+            curvedness values and regions of sharp curvature having high
+            curvedness
+
+        returns:
+            ndarray: Shape: (N,)
+        """
+        return self.curvedness
+
+    def computed_sharpness(self) -> np.ndarray:
+        """Cache of sharpness for each vertex
+
+        Formulas is given as follows:
+            P1 = principal curvature minimum
+            P2 = principal curvature maximum
+            Sharpness        S = (P2 - P1)^2
+
+         The sharpness degree (S) measures the sharpness of the curvature by relating the
+         mean curvature H to the actual surface
+
+         returns:
+            ndarray: Shape: (N,)
+        """
+        return self.sharpness
+
+    def computed_shape_index(self) -> np.ndarray:
+        """Cache of shape index for each vertex
+
+        Formulas is given as follows:
+            P1 = principal curvature minimum
+            P2 = principal curvature maximum
+            Shape Index     SI = 2/pi * arctan((P2 + P1) / (P1 - P2))
+            TODO: what to do when P1 - P2 = 0?
+
+        The shape index (SI) is a number ranging from 1 to 1 that provides a continuous 
+        gradation between shapes. It is sensitive to subtle changes in surface shape, 
+        particularly in regions where total curvature is very low. For instance, hollow
+        structures have a shape index of <0, and inflections and bumps have a shape index of > 0
+
+        returns:
+            ndarray: Shape: (N,)
+        """
+        return self.shape_index
+
+    def computed_total_curvature(self) -> np.ndarray:
+        """Cache of total curvature for each vertex
+        Formulas is given as follows:
+            P1 = principal curvature minimum
+            P2 = principal curvature maximum
+            Total Curvature  K = abs(P1) + abs(P2)
+
+        The total curvature (KT) was computed to obtain the absolute value of the total curvature
+        at each surface voxel
+
+        returns:
+            ndarray: Shape: (N,)
+        """
+        return self.total_curvature
+
     def __str__(self):
         header = SummaryRow.print_header()
         curvedness_summary = SummaryRow(
@@ -126,7 +152,7 @@ class SurfaceMeasures:
             self.computed_curvedness(), "Shape Index")
         total_curvature_summary = SummaryRow(
             self.computed_curvedness(), "Total Curvature")
-        return "\n".join(map(str,[header, curvedness_summary, sharpness_summary, shape_index_summary, total_curvature_summary]))
+        return "\n".join(map(str, [header, curvedness_summary, sharpness_summary, shape_index_summary, total_curvature_summary]))
 
 
 class Isosurface(NamedTuple):
@@ -141,7 +167,7 @@ class Isosurface(NamedTuple):
                faces = [[0 1 2]]
         normals : TODO
         values : TODO
-        
+
     """
     verts: np.ndarray
     faces: np.ndarray
@@ -154,6 +180,17 @@ class MorphologyFeatures:
     Datam to hold Morphology Features
     """
 
+    def __init__(self,
+                 curvature: Curvature,
+                 surface_measures: SurfaceMeasures,
+                 surface_mesh: PolyData,
+                 isosurface: Isosurface
+                 ):
+        self.curvature = curvature
+        self.surface_measures = surface_measures
+        self.surface_mesh = surface_mesh
+        self.isosurface = isosurface
+
     def get_curvature(self) -> Curvature:
         """
         Getter for Curvature
@@ -163,7 +200,7 @@ class MorphologyFeatures:
     def get_isosurface(self) -> Isosurface:
         """
         Getter for IsoSurface
-        
+
         This class contains information to create a mesh or surface plot for visalizations
         """
         return self.isosurface
@@ -174,23 +211,12 @@ class MorphologyFeatures:
         """
         return self.surface_measures
 
-    def __init__(self,
-                 curvature: Curvature,
-                 surface_measures: SurfaceMeasures,
-                 surface_mesh: PolyData,
-                 isosurface: Isosurface
-        ):
-        self.curvature = curvature
-        self.surface_measures = surface_measures
-        self.surface_mesh = surface_mesh
-        self.isosurface = isosurface
-
     def __str__(self):
         return (f"Curvature:\n{self.curvature}\n"
                 f"Surface measures:\n{self.surface_measures}")
 
 
-def compute_morphology_features(mri_mask_voxels: np.ndarray, spacing: Tuple[float, float, float] = (1., 1., 1.)):
+def compute_morphology_features(mri_mask_voxels: np.ndarray, spacing: Tuple[float, float, float] = (1., 1., 1.)) -> MorphologyFeatures:
     """
     This function will compute the surface measures as published in (TODO: paper link)
 
@@ -204,15 +230,17 @@ def compute_morphology_features(mri_mask_voxels: np.ndarray, spacing: Tuple[floa
         mri_3d_voxels[mri_3d_voxels > 0] = 255
         features_data = compute_morphology_features(mri_3d_voxels)
     """
-    smoothed_mri_mask_voxels = ndimage.gaussian_filter(mri_mask_voxels, sigma=3)
-    verts, faces, normals, values = measure.marching_cubes(smoothed_mri_mask_voxels, spacing=spacing)
+    smoothed_mri_mask_voxels = ndimage.gaussian_filter(
+        mri_mask_voxels, sigma=3)
+    verts, faces, normals, values = measure.marching_cubes(
+        smoothed_mri_mask_voxels, spacing=spacing)
     faces_rows = faces.shape[0]
-    poly_faces = np.column_stack([3*np.ones((faces_rows, 1), dtype=np.int), faces])
+    poly_faces = np.column_stack(
+        [3*np.ones((faces_rows, 1), dtype=np.int), faces])
     _isosurface = Isosurface(verts, faces, normals, values)
     surface = pv.PolyData(verts, poly_faces.flatten())
 
     _curvature = _compute_curvature(surface)
-
     _surface_measures = _compute_surface_measures(_curvature)
 
     return MorphologyFeatures(
@@ -264,6 +292,10 @@ def _compute_surface_measures(curvature: Curvature) -> SurfaceMeasures:
 
 
 class SummaryRow():
+    """
+    Helper class to sumarize results for ndarrays
+    """
+
     _HEADER = [
         "row_header",
         "shape",
@@ -274,7 +306,7 @@ class SummaryRow():
     ]
 
     _FORMAT = {
-        "row_header" : "{:25s}",
+        "row_header": "{:25s}",
         "shape": "{}",
         "min": "{:+.4e}",
         "max": "{:+.4e}",
@@ -297,7 +329,7 @@ class SummaryRow():
 
     def __str__(self):
         values = [
-            self._FORMAT["row_header"].format(self.row_header), 
+            self._FORMAT["row_header"].format(self.row_header),
             self._FORMAT["shape"].format(self.shape),
             self._FORMAT["min"].format(self.min),
             self._FORMAT["max"].format(self.max),
@@ -324,5 +356,3 @@ if __name__ == "__main__":
         print(features_data)
     except:
         print("nibabel not installed. Can't run __main__")
-    
-
