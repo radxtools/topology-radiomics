@@ -241,12 +241,12 @@ def compute_morphology_features(mri_mask_voxels: np.ndarray,
         mri_3d_voxels[mri_3d_voxels > 0] = 255
         features_data = compute_morphology_features(mri_3d_voxels)
     """
-    "TODO: input santization"
-    "convert type to float 34"
-    
+    logger.debug(f"mri_mask_voxels type is {mri_mask_voxels.dtype}")
     logger.info(f"Starting Smoothing (iterations={config.gaussian_iterations}, sigma={config.gaussian_sigma})")
     logger.debug(f"Iteration 1: smoothing using sigma: {config.gaussian_sigma}")
     smoothed_mri_mask_voxels = gaussian_filter(mri_mask_voxels, sigma=config.gaussian_sigma)
+    logger.debug(f"smoothed_mri_mask type is {smoothed_mri_mask_voxels.dtype}")
+
     for i in range(1,config.gaussian_iterations):
         logger.debug(f"Iteration {i}: smoothing using sigma: {config.gaussian_sigma}")
         smoothed_mri_mask_voxels = gaussian_filter(mri_mask_voxels, sigma=config.gaussian_sigma)

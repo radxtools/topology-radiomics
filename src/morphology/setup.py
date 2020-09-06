@@ -8,11 +8,9 @@ setup(
     description='Morphology Implementation',
     long_description='TBD',
     long_description_content_type='text/markdown',
-    url='https://github.com/Toth-Technology/bric-morphologys',
+    url='https://github.com/neshdev/pypy_test',
     project_urls={
-        'Docker Examples': 'TBD',
-        'Docker Module': 'TBD',
-        'Github': 'https://github.com/Toth-Technology/bric-morphology'
+        'Github': 'https://github.com/neshdev/pypy_test'
     },
     packages=['morphology'],
     classifiers=[
