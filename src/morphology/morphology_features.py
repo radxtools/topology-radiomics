@@ -7,8 +7,9 @@ from pyvista import PolyData
 import logging
 from morphology.config import MorphologyConfig, MarchingCubesAlgorithm
 from morphology.reporting import SummaryRow
+from morphology.sanitization import BinaryVoxelMask
 
-logger = logging.getLogger("morphology_features")
+logger = logging.getLogger("morphology.morphology_features")
 
 class Curvature:
     """
@@ -120,7 +121,7 @@ class SurfaceMeasures:
             P1 = principal curvature minimum
             P2 = principal curvature maximum
             Shape Index     SI = 2/pi * arctan((P2 + P1) / (P1 - P2))
-            TODO: what to do when P1 - P2 = 0? - add epsilon = 10^-6
+                to avoid divison by zero when P1 - P2 we add epsilon(10^-6)
 
         The shape index (SI) is a number ranging from -1 to 1 that provides a continuous 
         gradation between shapes. It is sensitive to subtle changes in surface shape, 
@@ -171,8 +172,8 @@ class Isosurface(NamedTuple):
                ex:  
                verts = [ [0,0,0], [2,2,2], [0,1,0]]
                faces = [[0 1 2]]
-        normals : TODO
-        values : TODO
+        normals : The normal direction at each vertex, as calculated from the data. Shape: (N, 3)
+        values : Gives a measure for the maximum value of the data in the local region near each vertex. This can be used by visualization tools to apply a colormap to the mesh. Shape: (N, )
 
     """
     verts: np.ndarray
@@ -222,7 +223,7 @@ class MorphologyFeatures:
                 f"Surface measures:\n{self.surface_measures}")
 
 
-def compute_morphology_features(mri_mask_voxels: np.ndarray,
+def compute_morphology_features(mri_mask_voxels: BinaryVoxelMask,
                                 config: MorphologyConfig = MorphologyConfig()) ->MorphologyFeatures:
     """
     This function will compute the surface measures as published in (TODO: paper link)
@@ -241,10 +242,11 @@ def compute_morphology_features(mri_mask_voxels: np.ndarray,
         mri_3d_voxels[mri_3d_voxels > 0] = 255
         features_data = compute_morphology_features(mri_3d_voxels)
     """
-    logger.debug(f"mri_mask_voxels type is {mri_mask_voxels.dtype}")
+    mask = mri_mask_voxels.mri_voxel_mask
+    logger.debug(f"mask type is {mask.dtype}")
     logger.info(f"Starting Smoothing (iterations={config.gaussian_iterations}, sigma={config.gaussian_sigma})")
     logger.debug(f"Iteration 1: smoothing using sigma: {config.gaussian_sigma}")
-    smoothed_mri_mask_voxels = gaussian_filter(mri_mask_voxels, sigma=config.gaussian_sigma)
+    smoothed_mri_mask_voxels = gaussian_filter(mask, sigma=config.gaussian_sigma)
     logger.debug(f"smoothed_mri_mask type is {smoothed_mri_mask_voxels.dtype}")
 
     for i in range(1,config.gaussian_iterations):
@@ -339,6 +341,7 @@ if __name__ == "__main__":
     import nibabel as nib
     from pkg_resources import resource_filename
     import logging
+    import morphology as morph
 
     FORMAT = '%(asctime)-15s %(levelname)s %(funcName)s  %(message)s'
     logging.basicConfig(format=FORMAT, level=logging.DEBUG)
@@ -349,7 +352,18 @@ if __name__ == "__main__":
     
     img = nib.load(nii_path)
     mri_3d_voxels = img.get_fdata().copy()
-    mri_3d_voxels[mri_3d_voxels > 0] = 1
-    features_data = compute_morphology_features(mri_3d_voxels)
+    """
+    mri_3d_voxels has labels [0,1,2] for every element in the array
+    we would like to just use just part of the volume with label 1
+    The below table is mapping for which region to keep
+    2 1 0 <- labels
+    0 0 0 = 0
+    0 0 1 = 1
+    0 1 0 = 2
+    0 1 1 = 3
+    ...
+    """
+    sanitized_voxels = morph.convert_volume_into_mask(mri_3d_voxels,union=2)
+    features_data = compute_morphology_features(sanitized_voxels)
     print(features_data)
 
