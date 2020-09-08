@@ -44,6 +44,7 @@ setup(
             'release': ('setup.py', release),
             'source_dir': ('setup.py', 'docs/source'),
             'config_dir': ('setup.py', 'docs/source'),
+            'build_dir' : ('setup.py', 'docs/build')
             
         }
     },

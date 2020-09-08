@@ -34,6 +34,7 @@ extensions = [
     'recommonmark',
     'sphinx_rtd_theme',
     'sphinx.ext.autodoc',
+    'sphinx.ext.mathjax'
     # 'sphinxcontrib.napoleon'
 ]
 
