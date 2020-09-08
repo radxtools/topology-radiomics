@@ -1,15 +1,16 @@
-import numpy as np
-from typing import NamedTuple, Tuple
-from scipy.ndimage import gaussian_filter
-from skimage.measure import marching_cubes
-import pyvista as pv
-from pyvista import PolyData
-import logging
-from morphology.config import MorphologyConfig, MarchingCubesAlgorithm
-from morphology.reporting import SummaryRow
 from morphology.sanitization import BinaryVoxelMask
+from morphology.reporting import SummaryRow
+from morphology.config import MorphologyConfig, MarchingCubesAlgorithm
+import logging
+from pyvista import PolyData
+import pyvista as pv
+from skimage.measure import marching_cubes
+from scipy.ndimage import gaussian_filter
+from typing import NamedTuple, Tuple
+import numpy as np
 
 logger = logging.getLogger("morphology.morphology_features")
+
 
 class Curvature:
     """
@@ -18,29 +19,33 @@ class Curvature:
 
     def computed_gaussian_curvature(self) -> np.ndarray:
         """Computes the gaussian curvature for each vertex
-        returns:
-            ndarray: Shape: (N,)
+
+        Returns:
+            ndarray with Shape: (N,)
         """
         return self.gaussian_curvature
 
     def computed_mean_curvature(self) -> np.ndarray:
         """Computes the mean curvature for each vertex
-        returns:
-            ndarray: Shape: (N,)
+
+        Returns:
+            ndarray with Shape: (N,)
         """
         return self.mean_curvature
 
     def computed_principal_curvature_min(self) -> np.ndarray:
         """Computes the minimum principal curvature for each vertex
-        returns:
-            ndarray: Shape: (N,)
+
+        Returns:
+            ndarray with Shape: (N,)
         """
         return self.principal_curvature_min
 
     def computed_principal_curvature_max(self) -> np.ndarray:
         """Computes the maximum principal curvature for each vertex
-        returns:
-            ndarray: Shape: (N,)
+
+        Returns:
+            ndarray with Shape: (N,)
         """
         return self.principal_curvature_max
 
@@ -93,8 +98,8 @@ class SurfaceMeasures:
             curvedness values and regions of sharp curvature having high
             curvedness
 
-        returns:
-            ndarray: Shape: (N,)
+        Returns:
+            ndarray with Shape: (N,)
         """
         return self.curvedness
 
@@ -109,8 +114,8 @@ class SurfaceMeasures:
          The sharpness degree (S) measures the sharpness of the curvature by relating the
          mean curvature H to the actual surface
 
-         returns:
-            ndarray: Shape: (N,)
+         Returns:
+            ndarray with Shape: (N,)
         """
         return self.sharpness
 
@@ -128,8 +133,8 @@ class SurfaceMeasures:
         particularly in regions where total curvature is very low. For instance, hollow
         structures have a shape index of <0, and inflections and bumps have a shape index of > 0
 
-        returns:
-            ndarray: Shape: (N,)
+        Returns:
+            ndarray with Shape: (N,)
         """
         return self.shape_index
 
@@ -143,8 +148,8 @@ class SurfaceMeasures:
         The total curvature (KT) was computed to obtain the absolute value of the total curvature
         at each surface voxel
 
-        returns:
-            ndarray: Shape: (N,)
+        Returns:
+            ndarray with Shape: (N,)
         """
         return self.total_curvature
 
@@ -199,22 +204,27 @@ class MorphologyFeatures:
         self.isosurface = isosurface
 
     def get_curvature(self) -> Curvature:
-        """
-        Getter for Curvature
+        """Getter for Curvature
+
+        Returns:
+            A Curvature object
         """
         return self.curvature
 
     def get_isosurface(self) -> Isosurface:
-        """
-        Getter for IsoSurface
-
+        """Getter for IsoSurface
         This class contains information to create a mesh or surface plot for visalizations
+
+        Returns:
+            The Isosurface created by marching cubes
         """
         return self.isosurface
 
     def get_surface_measures(self) -> SurfaceMeasures:
-        """
-        Getter for Surface Measures
+        """Getter for Surface Measures
+
+        Returns:
+            The Surface Measures
         """
         return self.surface_measures
 
@@ -224,38 +234,58 @@ class MorphologyFeatures:
 
 
 def compute_morphology_features(mri_mask_voxels: BinaryVoxelMask,
-                                config: MorphologyConfig = MorphologyConfig()) ->MorphologyFeatures:
+                                config: MorphologyConfig = MorphologyConfig()) -> MorphologyFeatures:
     """
     This function will compute the surface measures as published in (TODO: paper link)
-
-    :param mri_mask_voxels The mask of the voxel. Expected values for each element is {0,1}
-    :param config: Configurations used for computing the morphology features
 
     High Level overview of the algorithm:
         Gaussian Filter -> Marching Cubes -> PolyData Surface -> Results
 
-    Typical usage example:
-        import nibabel
+    Args:
+        mri_mask_voxels The mask of the voxel. Expected values for each element is {0,1}
+        config: Configurations used for computing the morphology features
+
+
+
+    Example:
+        import sys
+        import nibabel as nib
+        from pkg_resources import resource_filename
+        import logging
+        import morphology as mp
+
+        FORMAT = '%(asctime)-15s %(levelname)s %(funcName)s  %(message)s'
+        logging.basicConfig(format=FORMAT, level=logging.DEBUG)       
+        nii_path = resource_filename("morphology", "data/mask_recurrence.nii")
+
         img = nib.load(nii_path)
-        mri_3d_voxels: numpy.ndarray = img.get_fdata()
-        # contains only 0 or 255 (255 is the maximum pixel value)
-        mri_3d_voxels[mri_3d_voxels > 0] = 255
-        features_data = compute_morphology_features(mri_3d_voxels)
+        mri_3d_voxels = img.get_fdata().copy()
+        sanitized_voxels = mp.convert_volume_into_mask(mri_3d_voxels,union=2)
+        features_data = compute_morphology_features(sanitized_voxels)
+
+    Returns:
+        MorphologyFeatures: an object with cached values
     """
     mask = mri_mask_voxels.mri_voxel_mask
     logger.debug(f"mask type is {mask.dtype}")
-    logger.info(f"Starting Smoothing (iterations={config.gaussian_iterations}, sigma={config.gaussian_sigma})")
-    logger.debug(f"Iteration 1: smoothing using sigma: {config.gaussian_sigma}")
-    smoothed_mri_mask_voxels = gaussian_filter(mask, sigma=config.gaussian_sigma)
+    logger.info(
+        f"Starting Smoothing (iterations={config.gaussian_iterations}, sigma={config.gaussian_sigma})")
+    logger.debug(
+        f"Iteration 1: smoothing using sigma: {config.gaussian_sigma}")
+    smoothed_mri_mask_voxels = gaussian_filter(
+        mask, sigma=config.gaussian_sigma)
     logger.debug(f"smoothed_mri_mask type is {smoothed_mri_mask_voxels.dtype}")
 
-    for i in range(1,config.gaussian_iterations):
-        logger.debug(f"Iteration {i}: smoothing using sigma: {config.gaussian_sigma}")
-        smoothed_mri_mask_voxels = gaussian_filter(mri_mask_voxels, sigma=config.gaussian_sigma)
+    for i in range(1, config.gaussian_iterations):
+        logger.debug(
+            f"Iteration {i}: smoothing using sigma: {config.gaussian_sigma}")
+        smoothed_mri_mask_voxels = gaussian_filter(
+            mri_mask_voxels, sigma=config.gaussian_sigma)
 
-    logger.info(f"Coverting volume into triangles using marching cubes (spacing={config.voxel_spacing},method={config.marching_cubes_algorithm},step_size={config.marching_cubes_step_size})")
+    logger.info(
+        f"Coverting volume into triangles using marching cubes (spacing={config.voxel_spacing},method={config.marching_cubes_algorithm},step_size={config.marching_cubes_step_size})")
     verts, faces, normals, values = marching_cubes(
-        volume=smoothed_mri_mask_voxels, 
+        volume=smoothed_mri_mask_voxels,
         spacing=config.voxel_spacing,
         method=config.marching_cubes_algorithm.value,
         step_size=config.marching_cubes_step_size,
@@ -286,7 +316,13 @@ def compute_morphology_features(mri_mask_voxels: BinaryVoxelMask,
 
 
 def _compute_curvature(surface: pv.PolyData) -> Curvature:
-    "Private helper function to retrieve curvature based on Polydata computed curvature values for each vertex"
+    """Private helper function to retrieve curvature based on Polydata computed curvature values for each vertex
+    Args:
+        surface: the mesh created by the faces and vertices by running marching cubes
+
+    Returns:
+        A cached Curvature object for each vertex
+    """
     mean_curvature = np.array(surface.curvature("Mean"))
     gaussian_curvature = np.array(surface.curvature("Gaussian"))
     p_min = np.array(surface.curvature("Minimum"))
@@ -311,6 +347,12 @@ def _compute_surface_measures(curvature: Curvature) -> SurfaceMeasures:
             Sharpness        S = (P2 - P1)^2
             Shape Index     SI = 2/pi * arctan((P2 + P1) / (P1 - P2))
             Total Curvature  K = abs(P1) + abs(P2)
+
+        Args:
+            curvature: The curvature measures
+
+        Returns:
+            A cached SurfaceMeasures object for each vertex
     """
     p_min = curvature.computed_principal_curvature_min()
     p_max = curvature.computed_principal_curvature_max()
@@ -318,9 +360,11 @@ def _compute_surface_measures(curvature: Curvature) -> SurfaceMeasures:
     _curvedness = .5 * np.sqrt(p_min ** 2 + p_max**2)
     _sharpness = (p_max - p_min)**2
 
+    """
     # division by zero if p_max is p_mix.
     # to avoid this. add tiny error term.
     # This should only be the case if either p_max or p_min is zero meaning the there is no curvature
+    """
     diff = p_max - p_min
     diff[diff == 0] = 1e-6
 
@@ -328,9 +372,9 @@ def _compute_surface_measures(curvature: Curvature) -> SurfaceMeasures:
     _total_curvature = np.abs(p_max) + np.abs(p_min)
 
     _surface_measures = SurfaceMeasures(
-        curvedness=_curvedness, 
-        sharpness=_sharpness, 
-        shape_index=_shape_index, 
+        curvedness=_curvedness,
+        sharpness=_sharpness,
+        shape_index=_shape_index,
         total_curvature=_total_curvature)
     return _surface_measures
 
@@ -349,21 +393,9 @@ if __name__ == "__main__":
     nii_path = resource_filename("morphology", "data/Lesion.nii")
     nii_path = resource_filename("morphology", "data/mask_PsP.nii")
     nii_path = resource_filename("morphology", "data/mask_recurrence.nii")
-    
+
     img = nib.load(nii_path)
     mri_3d_voxels = img.get_fdata().copy()
-    """
-    mri_3d_voxels has labels [0,1,2] for every element in the array
-    we would like to just use just part of the volume with label 1
-    The below table is mapping for which region to keep
-    2 1 0 <- labels
-    0 0 0 = 0
-    0 0 1 = 1
-    0 1 0 = 2
-    0 1 1 = 3
-    ...
-    """
-    sanitized_voxels = morph.convert_volume_into_mask(mri_3d_voxels,union=2)
+    sanitized_voxels = morph.convert_volume_into_mask(mri_3d_voxels, merge_labels=[1,2])
     features_data = compute_morphology_features(sanitized_voxels)
     print(features_data)
-
