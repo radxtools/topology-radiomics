@@ -27,8 +27,8 @@ jobs:
         python setup.py sdist bdist_wheel
     - name: Deploy package to test Pypi
       env:
-        USERNAME: ${{ TWINE_TEST_USERNAME }}
-        PASSWORD: ${{ TWINE_TEST_PASSWORD }}
+        USERNAME: ${{ secrets.TWINE_TEST_USERNAME }}
+        PASSWORD: ${{ secrets.TWINE_TEST_PASSWORD }}
       run: |
         cd src
         twine upload -r testpypi -u $USERNAME -p $PASSWORD dist/*
