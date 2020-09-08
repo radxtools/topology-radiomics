@@ -42,7 +42,7 @@ class VolumeNotBinaryException(Exception):
 
 
 class BinaryVoxelMask:
-    "A validated voxel mask that can be used for computing surface measures."
+    """A validated voxel mask that can be used for computing surface measures."""
 
     mri_voxel_mask: np.ndarray = None
 
@@ -58,19 +58,19 @@ class OutOfBoundsException(Exception):
         self.msg = f"Out of bounds exception. Expected {expected_bound} but Actual {actual_bound}"
 
 
-def convert_volume_into_multiple_masks(mri_volume: np.ndarray, subset_id: List[int]) -> List[BinaryVoxelMask]:
+def convert_volume_into_multiple_masks(mri_volume: np.ndarray, subset_ids: List[int]) -> List[BinaryVoxelMask]:
     """
     Utility function to create multiple masks based on subset_id. See `convert_volume_into_mask`
 
     Args:
-        mri_volume: The 3d mri volume
-        subset_id: see (merge_labels :int) parameter
+        | mri_volume: The 3d mri volume
+        | subset_ids: see (merge_labels :int) parameter
     Returns:
         A list of validated BinaryVoxelMask's
 
     """
     masks = []
-    for _id in subset_id:
+    for _id in subset_ids:
         masks.append(convert_volume_into_mask(mri_volume, _id))
     return masks
 

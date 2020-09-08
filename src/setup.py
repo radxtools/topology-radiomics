@@ -1,5 +1,10 @@
 from setuptools import setup
+from sphinx.setup_command import BuildDoc
+cmdclass = {'build_sphinx': BuildDoc}
 
+name = 'morphology'
+version = '0.0.0'
+release = '0.0.0'
 setup(
     name='morphology',
     version='0.0.0',
@@ -32,4 +37,14 @@ setup(
     ],
     python_requires='>=3.8',
     keywords='TBD',
+    command_options={
+        'build_sphinx': {
+            'project': ('setup.py', name),
+            'version': ('setup.py', version),
+            'release': ('setup.py', release),
+            'source_dir': ('setup.py', 'docs/source'),
+            'config_dir': ('setup.py', 'docs/source'),
+            
+        }
+    },
 )

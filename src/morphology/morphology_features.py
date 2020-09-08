@@ -90,11 +90,11 @@ class SurfaceMeasures:
         """Cache of curvedness for each vertex
 
         Formulas is given as follows:
-            P1 = principal curvature minimum
-            P2 = principal curvature maximum
-            Curvedness       C = 5 * sqrt(P1^2 + P2^2)
+        |   P1 = principal curvature minimum
+        |   P2 = principal curvature maximum
+        |   Curvedness       C = 5 * sqrt(P1^2 + P2^2)
 
-            The curvedness (C) captures flat regions in the surface with low
+        |   The curvedness (C) captures flat regions in the surface with low
             curvedness values and regions of sharp curvature having high
             curvedness
 
@@ -107,12 +107,12 @@ class SurfaceMeasures:
         """Cache of sharpness for each vertex
 
         Formulas is given as follows:
-            P1 = principal curvature minimum
-            P2 = principal curvature maximum
-            Sharpness        S = (P2 - P1)^2
+        |    P1 = principal curvature minimum
+        |    P2 = principal curvature maximum
+        |    Sharpness        S = (P2 - P1)^2
 
-         The sharpness degree (S) measures the sharpness of the curvature by relating the
-         mean curvature H to the actual surface
+        | The sharpness degree (S) measures the sharpness of the curvature by relating the
+          mean curvature H to the actual surface
 
          Returns:
             ndarray with Shape: (N,)
@@ -123,15 +123,15 @@ class SurfaceMeasures:
         """Cache of shape index for each vertex
 
         Formulas is given as follows:
-            P1 = principal curvature minimum
-            P2 = principal curvature maximum
-            Shape Index     SI = 2/pi * arctan((P2 + P1) / (P1 - P2))
-                to avoid divison by zero when P1 - P2 we add epsilon(10^-6)
+        |    P1 = principal curvature minimum
+        |    P2 = principal curvature maximum
+        |    Shape Index     SI = 2/pi * arctan((P2 + P1) / (P1 - P2))
+        |        where to avoid divison by zero when P1 - P2 we add epsilon(10^-6)
 
-        The shape index (SI) is a number ranging from -1 to 1 that provides a continuous 
-        gradation between shapes. It is sensitive to subtle changes in surface shape, 
-        particularly in regions where total curvature is very low. For instance, hollow
-        structures have a shape index of <0, and inflections and bumps have a shape index of > 0
+        | The shape index (SI) is a number ranging from -1 to 1 that provides a continuous 
+         gradation between shapes. It is sensitive to subtle changes in surface shape, 
+         particularly in regions where total curvature is very low. For instance, hollow
+         structures have a shape index of <0, and inflections and bumps have a shape index of > 0
 
         Returns:
             ndarray with Shape: (N,)
@@ -141,12 +141,12 @@ class SurfaceMeasures:
     def computed_total_curvature(self) -> np.ndarray:
         """Cache of total curvature for each vertex
         Formulas is given as follows:
-            P1 = principal curvature minimum
-            P2 = principal curvature maximum
-            Total Curvature  K = abs(P1) + abs(P2)
+        |    P1 = principal curvature minimum
+        |    P2 = principal curvature maximum
+        |    Total Curvature  K = abs(P1) + abs(P2)
 
-        The total curvature (KT) was computed to obtain the absolute value of the total curvature
-        at each surface voxel
+        | The total curvature (KT) was computed to obtain the absolute value of the total curvature
+          at each surface voxel
 
         Returns:
             ndarray with Shape: (N,)
@@ -166,19 +166,21 @@ class SurfaceMeasures:
 
 
 class Isosurface(NamedTuple):
-    """
-    This class is useful when you need draw the surface.
+    """This class is useful when you need draw the surface.
 
     This is a cache of the output from marching cubes algorithm.
 
     Attributes:
-        verts: list of the vertex (x,y,z), Shape: (N x 3)
-        faces: list with three items which contains the vertex index
-               ex:  
-               verts = [ [0,0,0], [2,2,2], [0,1,0]]
-               faces = [[0 1 2]]
-        normals : The normal direction at each vertex, as calculated from the data. Shape: (N, 3)
-        values : Gives a measure for the maximum value of the data in the local region near each vertex. This can be used by visualization tools to apply a colormap to the mesh. Shape: (N, )
+    |   verts: list of the vertex (x,y,z), Shape: (N x 3)
+
+    |   faces: list with three items which contains the vertex index
+                Example:  
+                    >>> verts = [[0,0,0], [2,2,2], [0,1,0]]
+                    >>> faces = [[0 1 2]]
+
+    |   normals: The normal direction at each vertex, as calculated from the data. Shape: (N, 3)
+
+    |   values: Gives a measure for the maximum value of the data in the local region near each vertex. This can be used by visualization tools to apply a colormap to the mesh. Shape: (N, )
 
     """
     verts: np.ndarray
@@ -242,29 +244,26 @@ def compute_morphology_features(mri_mask_voxels: BinaryVoxelMask,
         Gaussian Filter -> Marching Cubes -> PolyData Surface -> Results
 
     Args:
-        mri_mask_voxels The mask of the voxel. Expected values for each element is {0,1}
-        config: Configurations used for computing the morphology features
-
-
+        | mri_mask_voxels: The mask of the voxel. Expected values for each element is {0,1}
+        | config: Configurations used for computing the morphology features
 
     Example:
-        import sys
-        import nibabel as nib
-        from pkg_resources import resource_filename
-        import logging
-        import morphology as mp
-
-        FORMAT = '%(asctime)-15s %(levelname)s %(funcName)s  %(message)s'
-        logging.basicConfig(format=FORMAT, level=logging.DEBUG)       
-        nii_path = resource_filename("morphology", "data/mask_recurrence.nii")
-
-        img = nib.load(nii_path)
-        mri_3d_voxels = img.get_fdata().copy()
-        sanitized_voxels = mp.convert_volume_into_mask(mri_3d_voxels,union=2)
-        features_data = compute_morphology_features(sanitized_voxels)
+        >>> import sys
+        >>> import nibabel as nib
+        >>> from pkg_resources import resource_filename
+        >>> import logging
+        >>> import morphology as mp
+        >>> FORMAT = '%(asctime)-15s %(levelname)s %(funcName)s  %(message)s'
+        >>> logging.basicConfig(format=FORMAT, level=logging.DEBUG)       
+        >>> nii_path = resource_filename("morphology", "data/mask_recurrence.nii")
+        >>> img = nib.load(nii_path)
+        >>> mri_3d_voxels = img.get_fdata().copy()
+        >>> sanitized_voxels = mp.convert_volume_into_mask(mri_3d_voxels,merge_labels=2)
+        >>> features_data = compute_morphology_features(sanitized_voxels)
 
     Returns:
         MorphologyFeatures: an object with cached values
+        
     """
     mask = mri_mask_voxels.mri_voxel_mask
     logger.debug(f"mask type is {mask.dtype}")
@@ -396,6 +395,7 @@ if __name__ == "__main__":
 
     img = nib.load(nii_path)
     mri_3d_voxels = img.get_fdata().copy()
-    sanitized_voxels = morph.convert_volume_into_mask(mri_3d_voxels, merge_labels=[1,2])
+    sanitized_voxels = morph.convert_volume_into_mask(
+        mri_3d_voxels, merge_labels=[1, 2])
     features_data = compute_morphology_features(sanitized_voxels)
     print(features_data)
