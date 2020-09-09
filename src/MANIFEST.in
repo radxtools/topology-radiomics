@@ -1,1 +1,1 @@
-include morphology/data/*.nii
+include bric_radiomics/data/*.nii

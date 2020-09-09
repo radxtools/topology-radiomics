@@ -1,6 +1,6 @@
-from morphology.sanitization import BinaryVoxelMask
-from morphology.reporting import SummaryRow
-from morphology.config import MorphologyConfig, MarchingCubesAlgorithm
+from bric_radiomics.sanitization import BinaryVoxelMask
+from bric_radiomics.reporting import SummaryRow
+from bric_radiomics.config import MorphologyConfig, MarchingCubesAlgorithm
 import logging
 from pyvista import PolyData
 import pyvista as pv
@@ -9,7 +9,7 @@ from scipy.ndimage import gaussian_filter
 from typing import NamedTuple, Tuple
 import numpy as np
 
-logger = logging.getLogger("morphology.morphology_features")
+logger = logging.getLogger("bric_radiomics.morphology_features")
 
 
 class Curvature:
@@ -266,13 +266,13 @@ def compute_morphology_features(mri_mask_voxels: BinaryVoxelMask,
         >>> import nibabel as nib
         >>> from pkg_resources import resource_filename
         >>> import logging
-        >>> import morphology as mp
+        >>> import bric_radiomics as br
         >>> FORMAT = '%(asctime)-15s %(levelname)s %(funcName)s  %(message)s'
         >>> logging.basicConfig(format=FORMAT, level=logging.DEBUG)       
         >>> nii_path = resource_filename("morphology", "data/mask_recurrence.nii")
         >>> img = nib.load(nii_path)
         >>> mri_3d_voxels = img.get_fdata().copy()
-        >>> sanitized_voxels = mp.convert_volume_into_mask(mri_3d_voxels,merge_labels=2)
+        >>> sanitized_voxels = br.convert_volume_into_mask(mri_3d_voxels,merge_labels=2)
         >>> features_data = compute_morphology_features(sanitized_voxels)
 
     Returns:
@@ -403,18 +403,18 @@ if __name__ == "__main__":
     import nibabel as nib
     from pkg_resources import resource_filename
     import logging
-    import morphology as morph
+    import bric_radiomics as br
 
     FORMAT = '%(asctime)-15s %(levelname)s %(funcName)s  %(message)s'
     logging.basicConfig(format=FORMAT, level=logging.DEBUG)
 
-    nii_path = resource_filename("morphology", "data/Lesion.nii")
-    nii_path = resource_filename("morphology", "data/mask_PsP.nii")
-    nii_path = resource_filename("morphology", "data/mask_recurrence.nii")
+    nii_path = resource_filename("bric_radiomics", "data/Lesion.nii")
+    nii_path = resource_filename("bric_radiomics", "data/mask_PsP.nii")
+    nii_path = resource_filename("bric_radiomics", "data/mask_recurrence.nii")
 
     img = nib.load(nii_path)
     mri_3d_voxels = img.get_fdata().copy()
-    sanitized_voxels = morph.convert_volume_into_mask(
+    sanitized_voxels = br.convert_volume_into_mask(
         mri_3d_voxels, merge_labels=[1, 2])
     features_data = compute_morphology_features(sanitized_voxels)
     print(features_data)

@@ -3,7 +3,7 @@ from abc import ABC
 from typing import List, Union
 import logging
 
-logger = logging.getLogger("morphology.sanitization")
+logger = logging.getLogger("bric_radiomics.sanitization")
 
 _3D_PRINCIPAL_AXIS_COUNT = 3
 
