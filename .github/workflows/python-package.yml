@@ -25,11 +25,19 @@ jobs:
       run: |
         cd src
         python setup.py sdist bdist_wheel
-    - name: Deploy package to test Pypi
-      env:
-        USERNAME: ${{ secrets.TWINE_TEST_USERNAME }}
-        PASSWORD: ${{ secrets.TWINE_TEST_PASSWORD }}
+    - name: List Environment variables
       run: |
-        cd src
-        twine upload -r testpypi -u $USERNAME -p $PASSWORD dist/*
+        printenv
+        echo "HEAD REF : $GITHUB_HEAD_REF"
+        echo "GITHUB BASE REF ID : $GITHUB_BASE_REF"
+        echo "GITHUB_REF : $GITHUB_REF"
+        echo "RUN ID : $GITHUB_RUN_ID"
+        echo "GITHUB RUN NUMBER : $GITHUB_RUN_NUMBER"        
+    # - name: Deploy package to test Pypi
+    #   env:
+    #     USERNAME: ${{ secrets.TWINE_TEST_USERNAME }}
+    #     PASSWORD: ${{ secrets.TWINE_TEST_PASSWORD }}
+    #   run: |
+    #     cd src
+    #     twine upload -r testpypi -u $USERNAME -p $PASSWORD dist/*
     
