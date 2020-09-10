@@ -152,7 +152,7 @@ def convert_volume_into_mask(mri_volume: np.ndarray, merge_labels: Union[int, Li
 
     labels = sorted(list(np.unique(mri_volume)))
     logging.debug(f"Found Labels: {labels}")
-    mask = mri_volume.copy()
+    mask = mri_volume.astype(np.float)
 
     if isinstance(merge_labels, List):
         mergeable_labels = set(merge_labels)

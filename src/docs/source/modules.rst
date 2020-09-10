@@ -1,7 +1,7 @@
-morphology
-==========
+bric_radiomics
+==============
 
 .. toctree::
    :maxdepth: 4
 
-   morphology
+   bric_radiomics

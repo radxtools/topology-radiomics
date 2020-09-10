@@ -3,3 +3,4 @@ nibabel
 scikit-image
 pyvista
 plotly
+medpy
