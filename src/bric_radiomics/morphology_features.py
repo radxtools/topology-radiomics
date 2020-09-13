@@ -17,6 +17,7 @@ class Curvature:
     Datam to hold Curvature features
     """
 
+    @property
     def computed_gaussian_curvature(self) -> np.ndarray:
         """Computes the gaussian curvature for each vertex
 
@@ -25,6 +26,7 @@ class Curvature:
         """
         return self.gaussian_curvature
 
+    @property
     def computed_mean_curvature(self) -> np.ndarray:
         """Computes the mean curvature for each vertex
 
@@ -33,6 +35,7 @@ class Curvature:
         """
         return self.mean_curvature
 
+    @property
     def computed_principal_curvature_min(self) -> np.ndarray:
         """Computes the minimum principal curvature for each vertex
 
@@ -41,6 +44,7 @@ class Curvature:
         """
         return self.principal_curvature_min
 
+    @property
     def computed_principal_curvature_max(self) -> np.ndarray:
         """Computes the maximum principal curvature for each vertex
 
@@ -62,12 +66,12 @@ class Curvature:
     def __str__(self):
         header = SummaryRow.print_header()
         gauss = SummaryRow(
-            self.computed_gaussian_curvature(), "Gaussian Curvuture")
-        mean = SummaryRow(self.computed_mean_curvature(), "Mean Curvuture")
+            self.computed_gaussian_curvature, "Gaussian Curvuture")
+        mean = SummaryRow(self.computed_mean_curvature, "Mean Curvuture")
         pmin = SummaryRow(
-            self.computed_principal_curvature_min(), "Principal Curvature Min")
+            self.computed_principal_curvature_min, "Principal Curvature Min")
         pmax = SummaryRow(
-            self.computed_principal_curvature_max(), "Principal Curvature Max")
+            self.computed_principal_curvature_max, "Principal Curvature Max")
         return "\n".join(map(str, [header, gauss, mean, pmin, pmax]))
 
 
@@ -86,6 +90,7 @@ class SurfaceMeasures:
         self.shape_index = shape_index
         self.total_curvature = total_curvature
 
+    @property
     def computed_curvedness(self) -> np.ndarray:
         """Cache of curvedness for each vertex
 
@@ -106,6 +111,7 @@ class SurfaceMeasures:
         """
         return self.curvedness
 
+    @property
     def computed_sharpness(self) -> np.ndarray:
         """Cache of sharpness for each vertex
 
@@ -125,6 +131,7 @@ class SurfaceMeasures:
         """
         return self.sharpness
 
+    @property
     def computed_shape_index(self) -> np.ndarray:
         """Cache of shape index for each vertex
 
@@ -147,6 +154,7 @@ class SurfaceMeasures:
         """
         return self.shape_index
 
+    @property
     def computed_total_curvature(self) -> np.ndarray:
         """Cache of total curvature for each vertex
 
@@ -170,12 +178,12 @@ class SurfaceMeasures:
     def __str__(self):
         header = SummaryRow.print_header()
         curvedness_summary = SummaryRow(
-            self.computed_curvedness(), "Curvedness")
-        sharpness_summary = SummaryRow(self.computed_sharpness(), "Sharpness")
+            self.computed_curvedness, "Curvedness")
+        sharpness_summary = SummaryRow(self.computed_sharpness, "Sharpness")
         shape_index_summary = SummaryRow(
-            self.computed_curvedness(), "Shape Index")
+            self.shape_index, "Shape Index")
         total_curvature_summary = SummaryRow(
-            self.computed_curvedness(), "Total Curvature")
+            self.total_curvature, "Total Curvature")
         return "\n".join(map(str, [header, curvedness_summary, sharpness_summary, shape_index_summary, total_curvature_summary]))
 
 
@@ -215,35 +223,38 @@ class MorphologyFeatures:
                  surface_mesh: PolyData,
                  isosurface: Isosurface
                  ):
-        self.curvature = curvature
-        self.surface_measures = surface_measures
-        self.surface_mesh = surface_mesh
-        self.isosurface = isosurface
+        self._curvature = curvature
+        self._surface_measures = surface_measures
+        self._surface_mesh = surface_mesh
+        self._isosurface = isosurface
 
-    def get_curvature(self) -> Curvature:
+    @property
+    def curvature(self) -> Curvature:
         """Getter for Curvature
 
         Returns:
             A Curvature object
         """
-        return self.curvature
+        return self._curvature
 
-    def get_isosurface(self) -> Isosurface:
+    @property
+    def isosurface(self) -> Isosurface:
         """Getter for IsoSurface
         This class contains information to create a mesh or surface plot for visalizations
 
         Returns:
             The Isosurface created by marching cubes
         """
-        return self.isosurface
+        return self._isosurface
 
-    def get_surface_measures(self) -> SurfaceMeasures:
+    @property
+    def surface_measures(self) -> SurfaceMeasures:
         """Getter for Surface Measures
 
         Returns:
             The Surface Measures
         """
-        return self.surface_measures
+        return self._surface_measures
 
     def __str__(self):
         return (f"Curvature:\n{self.curvature}\n"
@@ -372,8 +383,8 @@ def _compute_surface_measures(curvature: Curvature) -> SurfaceMeasures:
         Returns:
             A cached SurfaceMeasures object for each vertex
     """
-    p_min = curvature.computed_principal_curvature_min()
-    p_max = curvature.computed_principal_curvature_max()
+    p_min = curvature.computed_principal_curvature_min
+    p_max = curvature.computed_principal_curvature_max
 
     _curvedness = .5 * np.sqrt(p_min ** 2 + p_max**2)
     _sharpness = (p_max - p_min)**2
