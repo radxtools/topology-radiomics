@@ -9,6 +9,7 @@ cmdclass = {'build_sphinx': BuildDoc}
 
 def compute_version():
     #Will not be using date versioning because github run number keeps incrementing by 1
+    #Leaving this code here incase we want to revisit
     now = date.today()
     yy = now.year
     mm = now.month
@@ -66,6 +67,7 @@ setup(
         "numpy",
         "scikit-image",
         "pyvista",
+        "pandas",
     ],
     python_requires='>=3.8',
     keywords='TBD',

@@ -8,6 +8,7 @@ from skimage.measure import marching_cubes
 from scipy.ndimage import gaussian_filter
 from typing import NamedTuple, Tuple
 import numpy as np
+from pandas import DataFrame
 
 logger = logging.getLogger("bric_radiomics.morphology_features")
 
@@ -228,6 +229,23 @@ class MorphologyFeatures:
         self._surface_mesh = surface_mesh
         self._isosurface = isosurface
 
+    def to_DF(self) -> DataFrame:
+        """
+        Returns:
+            A useful dataframe that can be used to view the data
+        """
+        df = DataFrame({
+            "shape_index": self.surface_measures.computed_shape_index,
+            "curvedness": self.surface_measures.computed_curvedness,
+            "sharpness": self.surface_measures.computed_sharpness,
+            "total_curvature": self.surface_measures.computed_total_curvature,
+            "x": self.isosurface.verts[:, 0],
+            "y": self.isosurface.verts[:, 1],
+            "z": self.isosurface.verts[:, 2],
+            "face_idx": np.arange(self.surface_measures.computed_shape_index.shape[0])
+        })
+        return df
+
     @property
     def curvature(self) -> Curvature:
         """Getter for Curvature
@@ -267,7 +285,7 @@ def compute_morphology_features(mri_mask_voxels: BinaryVoxelMask,
 
     High Level overview of the algorithm:
         Gaussian Filter -> Marching Cubes -> PolyData Surface -> Results
-        
+
     Args:
         mri_mask_voxels: The mask of the voxel. Expected values for each element is {0,1}
         config: Configurations used for computing the morphology features
@@ -296,15 +314,16 @@ def compute_morphology_features(mri_mask_voxels: BinaryVoxelMask,
         f"Starting Smoothing (iterations={config.gaussian_iterations}, sigma={config.gaussian_sigma})")
     logger.debug(
         f"Iteration 1: smoothing using sigma: {config.gaussian_sigma}")
-    smoothed_mri_mask_voxels = gaussian_filter(
-        mask, sigma=config.gaussian_sigma)
+    smoothed_mri_mask_voxels = mask
     logger.debug(f"smoothed_mri_mask type is {smoothed_mri_mask_voxels.dtype}")
 
-    for i in range(1, config.gaussian_iterations):
+    for i in range(config.gaussian_iterations):
         logger.debug(
-            f"Iteration {i}: smoothing using sigma: {config.gaussian_sigma}")
+            f"Iteration {i+1}: smoothing using sigma: {config.gaussian_sigma}")
         smoothed_mri_mask_voxels = gaussian_filter(
-            mri_mask_voxels, sigma=config.gaussian_sigma)
+            smoothed_mri_mask_voxels, sigma=config.gaussian_sigma)
+        logger.debug(
+            f"smoothed_mri_mask type is {smoothed_mri_mask_voxels.dtype}")
 
     logger.info(
         f"Coverting volume into triangles using marching cubes (spacing={config.voxel_spacing},method={config.marching_cubes_algorithm},step_size={config.marching_cubes_step_size})")
@@ -328,7 +347,7 @@ def compute_morphology_features(mri_mask_voxels: BinaryVoxelMask,
     logger.debug(f"Curvature:\n {_curvature}")
 
     logger.info(f"Computing Surface Measures")
-    _surface_measures = _compute_surface_measures(_curvature)
+    _surface_measures = _compute_surface_measures(_curvature, config.clip_percent)
     logger.debug(f"Surface Measures:\n {_surface_measures}")
 
     return MorphologyFeatures(
@@ -360,7 +379,25 @@ def _compute_curvature(surface: pv.PolyData) -> Curvature:
     return _curvature
 
 
-def _compute_surface_measures(curvature: Curvature) -> SurfaceMeasures:
+def _clip(arr: np.ndarray, clip_percent: float, in_place=True) -> None:
+    """Private helper function to clip extreme values.
+
+    Clipping will set values over the population over the threshold to the value of the interval edge
+    More information about clipping can be found here: https://numpy.org/doc/stable/reference/generated/numpy.clip.html
+    """
+    left_percentile = clip_percent / 2
+    right_percentile = 1. - left_percentile
+    l = np.quantile(arr, left_percentile, interpolation='nearest')
+    r = np.quantile(arr, right_percentile, interpolation='nearest')
+    out = None
+    if in_place:
+        out = arr
+    results = np.clip(arr, a_min=l, a_max=r, out=out)
+    return results
+    
+
+
+def _compute_surface_measures(curvature: Curvature, clip_percent: float) -> SurfaceMeasures:
     """Private helper function to compute surface measures as published in (TODO: paper link)
 
         Formulas are given as follows:
@@ -387,8 +424,12 @@ def _compute_surface_measures(curvature: Curvature) -> SurfaceMeasures:
     p_max = curvature.computed_principal_curvature_max
 
     _curvedness = .5 * np.sqrt(p_min ** 2 + p_max**2)
-    _sharpness = (p_max - p_min)**2
+    logger.debug(f"Clipping cuvature using {clip_percent}")
+    _clip(_curvedness, clip_percent)
 
+    _sharpness = (p_max - p_min)**2
+    logger.debug(f"Clipping sharpness using {clip_percent}")
+    _clip(_sharpness, clip_percent)
     """
     # division by zero if p_max is p_mix.
     # to avoid this. add tiny error term.
@@ -396,9 +437,13 @@ def _compute_surface_measures(curvature: Curvature) -> SurfaceMeasures:
     """
     diff = p_max - p_min
     diff[diff == 0] = 1e-6
-
     _shape_index = 2/np.pi * np.arctan((p_max + p_min) / diff)
+    logger.debug(f"Clipping shape_index using {clip_percent}")
+    _clip(_shape_index, clip_percent)
+
     _total_curvature = np.abs(p_max) + np.abs(p_min)
+    logger.debug(f"Clipping total_curvature using {clip_percent}")
+    _clip(_total_curvature, clip_percent)
 
     _surface_measures = SurfaceMeasures(
         curvedness=_curvedness,

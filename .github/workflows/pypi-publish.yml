@@ -23,7 +23,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip setuptools wheel
         pip install sphinx sphinx-rtd-theme recommonmark twine
-        pip install numpy nibabel scikit-image pyvista
+        pip install numpy nibabel scikit-image pyvista pandas
     - name: Package Dependencies
       run: |
         cd src
