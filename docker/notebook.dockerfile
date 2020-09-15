@@ -9,6 +9,9 @@ COPY requirements.txt .
 COPY .env-scripts/dev_requirements.txt .
 COPY notebooks .
 
+# install graphics libs
+RUN apt-get update && apt-get install -y libglu1-mesa-dev freeglut3-dev mesa-common-dev
+
 # install dpendencies
 RUN PIP_INSTALL="python -m pip install --upgrade --no-cache-dir --retries 10 --timeout 60" && \
     $PIP_INSTALL -r dev_requirements.txt && \
