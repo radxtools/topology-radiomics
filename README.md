@@ -15,7 +15,7 @@ pip install topology_radiomics
 First clone this repository
 
 ```
-git clone https://github.com/Toth-Technology/bric-morphology.git
+git clone https://github.com/radxtools/topology-radiomics.git
 ```
 
 There are multiple ways to get started.
@@ -34,10 +34,13 @@ docker-compose up
 
 ### docker run
 
+With this step, you don't need to clone the url.
+Run the following commands to start the docker container
+
 ```
-docker rm neshdev/topology_radiomics_notebook
-docker pull neshdev/topology_radiomics_notebook
-docker run -d -p 3000:3000 --name topology_radiomics_notebook neshdev/topology_radiomics_notebook
+docker rm radxtools/topology-radiomics-examples
+docker pull radxtools/topology-radiomics-examples
+docker run -d -p 3000:3000 --name topology-radiomics-examples radxtools/topology-radiomics-examples
 ```
 
 ## Tutorials
@@ -49,6 +52,8 @@ Tutorial Notebooks:
 1. Tutorial - Getting started with topoplogy_radiomics.ipynb
 2. Tutorial - Using topology_radiomics to visualize features.ipynb
 3. Tutorial - Working with medpy and topology_radiomics.ipynb
+
+The notebooks can be viewed by opening the browser and visting the url http://localhost:3000
 
 
 # Contribution Guide:
