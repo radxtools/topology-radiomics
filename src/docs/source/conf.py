@@ -17,7 +17,7 @@
 
 # -- Project information -----------------------------------------------------
 
-project = 'bric-morphology'
+project = 'topology_radiomics'
 copyright = '2020, Toth Techonologies'
 author = 'Toth Techonologies'
 
