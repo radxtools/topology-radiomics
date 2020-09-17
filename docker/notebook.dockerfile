@@ -1,16 +1,17 @@
 # set base image (host OS)
 FROM python:3.8
 
+# install graphics libs
+RUN apt-get update && apt-get install -y libglu1-mesa-dev freeglut3-dev mesa-common-dev
+
 # set the working directory in the container
 WORKDIR /notebooks
 
 # copy the dependencies file to the working directory
 COPY requirements.txt .
 COPY .env-scripts/dev_requirements.txt .
-COPY notebooks .
+COPY notebooks ./notebooks
 
-# install graphics libs
-RUN apt-get update && apt-get install -y libglu1-mesa-dev freeglut3-dev mesa-common-dev
 
 # install dpendencies
 RUN PIP_INSTALL="python -m pip install --upgrade --no-cache-dir --retries 10 --timeout 60" && \

@@ -6,19 +6,27 @@ Software Installation
 
 # Build
 
-This command will create the image using the file `docker/notebook.dockerfile` and will name the name `notebook`
+This command will create the image using the file `docker/notebook.dockerfile` and will name the name image `notebook`
 
 ```sh
 docker build -f docker/notebook.dockerfile -t notebook .
+docker tag notebook neshdev/topology_radiomics_notebook
 ```
 
 # Run
 
-This command will create a container called `bric_notebook` that will start the image `notebook`
+This command will create a container called `topology_radiomics_notebook` that will start the image `notebook`
 
 ```sh
-docker rm bric_radiomics
-docker run -d -p 3000:3000 --name bric_notebook notebook
+docker rm topology_radiomics_notebook
+docker run -d -p 3000:3000 --name topology_radiomics_notebook notebook
+```
+
+# Compose
+
+```sh
+cd docker
+docker-compose up
 ```
 
 # Pushing to Docker Repo
@@ -29,8 +37,8 @@ The docker repo can be found [here](https://hub.docker.com/repository/docker/nes
 docker login
 >>username
 >>password
-docker tag notebook neshdev/notebook
-docker push neshdev/bric_radiomics:tagname
+docker tag notebook neshdev/topology_radiomics_notebook
+docker push neshdev/topology_radiomics_notebook:latest
 ```
 
 # Debugging the docker build
