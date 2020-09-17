@@ -1,7 +1,7 @@
-bric_radiomics
-==============
+topology_radiomics
+==================
 
 .. toctree::
    :maxdepth: 4
 
-   bric_radiomics
+   topology_radiomics

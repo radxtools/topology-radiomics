@@ -1,10 +1,13 @@
 import os
 from setuptools import setup
-from sphinx.setup_command import BuildDoc
 from datetime import date
 import subprocess
 from pathlib import Path
-cmdclass = {'build_sphinx': BuildDoc}
+try:
+    from sphinx.setup_command import BuildDoc
+    cmdclass = {'build_sphinx': BuildDoc}
+except Exception as ex:
+    print("sphinx cant be imported. Cannot use `build_sphinx` command")
 
 
 def compute_version():
@@ -26,13 +29,6 @@ def compute_version():
             branch_name = ref.split("/")[-1]
             if branch_name != "master":
                 version = f"{version}.dev{run_number}"
-    else:
-        print("Using shell to get branch name")
-        process = subprocess.run(
-            ['git', 'branch', '--show-current'], capture_output=True)
-        branch = process.stdout.decode('utf-8').strip()
-        if branch != 'master':
-            version = f"{version}.dev1"
     return version
 
 
