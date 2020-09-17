@@ -8,15 +8,15 @@ cmdclass = {'build_sphinx': BuildDoc}
 
 
 def compute_version():
-    #Will not be using date versioning because github run number keeps incrementing by 1
-    #Leaving this code here incase we want to revisit
+    # Will not be using date versioning because github run number keeps incrementing by 1
+    # Leaving this code here incase we want to revisit
     now = date.today()
     yy = now.year
     mm = now.month
     dd = now.day
     version = f"{yy}.{mm}.{dd}"
     version = (Path(__file__).parent / "version.txt").open().read()
-    
+
     if os.environ.get('GITHUB_RUN_NUMBER'):
         run_number = os.environ.get('GITHUB_RUN_NUMBER')
         print("Using github workflow")
@@ -28,14 +28,15 @@ def compute_version():
                 version = f"{version}.dev{run_number}"
     else:
         print("Using shell to get branch name")
-        process = subprocess.run(['git','branch', '--show-current'], capture_output=True)
+        process = subprocess.run(
+            ['git', 'branch', '--show-current'], capture_output=True)
         branch = process.stdout.decode('utf-8').strip()
         if branch != 'master':
             version = f"{version}.dev1"
     return version
-    
 
-name = 'bric_radiomics'
+
+name = 'topology_radiomics'
 version = compute_version()
 release = version
 setup(
@@ -43,14 +44,14 @@ setup(
     version=version,
     author='Toth Technology',
     author_email='toth-tech@hillyer.me',
-    description='Morphology Implementation',
+    description='Topology Radiomics by INVENT and BRIC lab',
     long_description='TBD',
     long_description_content_type='text/markdown',
-    url='https://github.com/neshdev/pypy_test',
+    url='https://github.com/Toth-Technology/bric-morphology',
     project_urls={
-        'Github': 'https://github.com/neshdev/pypy_test'
+        'Github': 'https://github.com/Toth-Technology/bric-morphology'
     },
-    packages=['bric_radiomics'],
+    packages=['topology_radiomics'],
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Science/Research',
@@ -68,9 +69,10 @@ setup(
         "scikit-image",
         "pyvista",
         "pandas",
+        "sphinx",
     ],
     python_requires='>=3.8',
-    keywords='TBD',
+    keywords='Topology Radiomics',
     command_options={
         'build_sphinx': {
             'project': ('setup.py', name),
@@ -78,8 +80,7 @@ setup(
             'release': ('setup.py', release),
             'source_dir': ('setup.py', 'docs/source'),
             'config_dir': ('setup.py', 'docs/source'),
-            'build_dir' : ('setup.py', 'docs/build')
-            
+            'build_dir': ('setup.py', 'docs/build')
         }
     },
 )

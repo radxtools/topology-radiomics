@@ -1,1 +1,1 @@
-include bric_radiomics/data/*.nii
+include topology_radiomics/data/*.nii
