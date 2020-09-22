@@ -1,0 +1,41 @@
+name: Python package for pypi
+
+on:
+  push:
+    tags:
+    - 'v*'
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.8]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip setuptools wheel
+        pip install -r .env-scripts/dev_requirements.txt
+        pip install -r requirements.txt
+    - name: Package Dependencies
+      run: |
+        cd src
+        python setup.py sdist bdist_wheel
+    - name: List Environment variables
+      run: |
+        printenv
+    - name: Deploy package to test Pypi
+      env:
+        USERNAME: ${{ secrets.TWINE_PROD_USERNAME }}
+        PASSWORD: ${{ secrets.TWINE_PROD_PASSWORD }}
+      run: |
+        cd src
+        twine upload -r pypi -u $USERNAME -p $PASSWORD dist/*
+    

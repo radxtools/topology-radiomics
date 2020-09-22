@@ -1,0 +1,8 @@
+autopep8
+mypy
+jupyterlab
+pylint
+sphinx
+sphinx-rtd-theme
+recommonmark
+twine

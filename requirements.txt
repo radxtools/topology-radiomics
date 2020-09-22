@@ -1,0 +1,7 @@
+numpy
+nibabel
+scikit-image
+pyvista
+plotly
+medpy
+pandas

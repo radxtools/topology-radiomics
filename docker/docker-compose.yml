@@ -1,0 +1,6 @@
+version: '2'
+services:
+  app:
+    image: radxtools/topology-radiomics-examples:latest
+    ports:
+        - "3000:3000"
