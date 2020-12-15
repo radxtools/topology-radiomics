@@ -1,0 +1,302 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Classes &mdash; topology_radiomics 0.0.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Getting started guide" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> topology_radiomics
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Classes</a><ul class="simple">
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">topology_radiomics</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Classes</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/classes.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="classes">
+<h1>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<dl class="py class">
+<dt id="topology_radiomics.config.MarchingCubesAlgorithm">
+<em class="property">class </em><code class="sig-prename descclassname">topology_radiomics.config.</code><code class="sig-name descname">MarchingCubesAlgorithm</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="headerlink" href="#topology_radiomics.config.MarchingCubesAlgorithm" title="Permalink to this definition">¶</a></dt>
+<dd><p>An enumeration.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="topology_radiomics.config.MorphologyConfig">
+<em class="property">class </em><code class="sig-prename descclassname">topology_radiomics.config.</code><code class="sig-name descname">MorphologyConfig</code><span class="sig-paren">(</span><em class="sig-param">voxel_spacing: Tuple[float</em>, <em class="sig-param">float</em>, <em class="sig-param">float] = (1.0</em>, <em class="sig-param">1.0</em>, <em class="sig-param">1.0)</em>, <em class="sig-param">gaussian_iterations: int = 3</em>, <em class="sig-param">gaussian_sigma: float = 3.0</em>, <em class="sig-param">marching_cubes_algorithm: topology_radiomics.config.MarchingCubesAlgorithm = &lt;MarchingCubesAlgorithm.Lewiner: 'lewiner'&gt;</em>, <em class="sig-param">marching_cubes_step_size: int = 1</em>, <em class="sig-param">clip_percent: float = 0.1</em><span class="sig-paren">)</span><a class="headerlink" href="#topology_radiomics.config.MorphologyConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>This class is used to provide configurations for the compute_morphology_features function. You can consider these as hyperparameters.</p>
+<dl>
+<dt>Attributes:</dt><dd><div class="line-block">
+<div class="line">voxel_spacing: The spacing between each pixel.</div>
+<div class="line">gaussian_iterations: The number of iterations to smooth the image.
+The higher this value, the more smooth the lesion will become.</div>
+<div class="line">gaussian_sigma: Standard deviation for Gaussian kernel.</div>
+<div class="line">marching_cubes_algorithm: The marching cubes algorithm to use.</div>
+<div class="line">marching_cubes_step_size: The marching cubes step size to use.</div>
+<div class="line">clip_percent: The percents of data points to clip at the end of the distribution. 
+        Values in the outer percentile is clamped to the edge values, 
+Example: 
+    &gt;&gt; clip_percent = .2
+    &gt;&gt; x = list(range(0, 10))
+    [0,1,2,3,4,5,6,7,8,9]
+    &gt;&gt; clip(x)
+    [1,1,2,3,4,5,6,7,8,8]</div>
+</div>
+<blockquote>
+<div><p>range: [0,1]
+.1 means clip [0,.05) and (0.95,100] in the distribution
+<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.clip.html">https://numpy.org/doc/stable/reference/generated/numpy.clip.html</a></p>
+</div></blockquote>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt id="topology_radiomics.morphology_features.Curvature">
+<em class="property">class </em><code class="sig-prename descclassname">topology_radiomics.morphology_features.</code><code class="sig-name descname">Curvature</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">gaussian_curvature</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em>, <em class="sig-param"><span class="n">mean_curvature</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em>, <em class="sig-param"><span class="n">principal_curvature_min</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em>, <em class="sig-param"><span class="n">principal_curvature_max</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em><span class="sig-paren">)</span><a class="headerlink" href="#topology_radiomics.morphology_features.Curvature" title="Permalink to this definition">¶</a></dt>
+<dd><p>Datam to hold Curvature features</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="topology_radiomics.morphology_features.SurfaceMeasures">
+<em class="property">class </em><code class="sig-prename descclassname">topology_radiomics.morphology_features.</code><code class="sig-name descname">SurfaceMeasures</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">curvedness</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em>, <em class="sig-param"><span class="n">sharpness</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em>, <em class="sig-param"><span class="n">shape_index</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em>, <em class="sig-param"><span class="n">total_curvature</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em><span class="sig-paren">)</span><a class="headerlink" href="#topology_radiomics.morphology_features.SurfaceMeasures" title="Permalink to this definition">¶</a></dt>
+<dd><p>Datam to hold Surface Measures</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="topology_radiomics.morphology_features.Isosurface">
+<em class="property">class </em><code class="sig-prename descclassname">topology_radiomics.morphology_features.</code><code class="sig-name descname">Isosurface</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">verts</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em>, <em class="sig-param"><span class="n">faces</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em>, <em class="sig-param"><span class="n">normals</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em>, <em class="sig-param"><span class="n">values</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em><span class="sig-paren">)</span><a class="headerlink" href="#topology_radiomics.morphology_features.Isosurface" title="Permalink to this definition">¶</a></dt>
+<dd><p>This class is useful when you need draw the surface.</p>
+<p>This is a cache of the output from marching cubes algorithm.</p>
+<p>Attributes:</p>
+<blockquote>
+<div><p>verts: list of the vertex (x,y,z), Shape: (N x 3)</p>
+<dl>
+<dt>faces: list with three items which contains the vertex index</dt><dd><dl>
+<dt>Example:  </dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">verts</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">faces</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">]]</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>normals: The normal direction at each vertex, as calculated from the data. Shape: (N, 3)</p>
+<p>values: Gives a measure for the maximum value of the data in the local region near each vertex. This can be used by visualization tools to apply a colormap to the mesh. Shape: (N, )</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py class">
+<dt id="topology_radiomics.morphology_features.MorphologyFeatures">
+<em class="property">class </em><code class="sig-prename descclassname">topology_radiomics.morphology_features.</code><code class="sig-name descname">MorphologyFeatures</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">curvature</span><span class="p">:</span> <span class="n"><a class="reference internal" href="topology_radiomics.html#topology_radiomics.morphology_features.Curvature" title="topology_radiomics.morphology_features.Curvature">topology_radiomics.morphology_features.Curvature</a></span></em>, <em class="sig-param"><span class="n">surface_measures</span><span class="p">:</span> <span class="n"><a class="reference internal" href="topology_radiomics.html#topology_radiomics.morphology_features.SurfaceMeasures" title="topology_radiomics.morphology_features.SurfaceMeasures">topology_radiomics.morphology_features.SurfaceMeasures</a></span></em>, <em class="sig-param"><span class="n">surface_mesh</span><span class="p">:</span> <span class="n">pyvista.core.pointset.PolyData</span></em>, <em class="sig-param"><span class="n">isosurface</span><span class="p">:</span> <span class="n"><a class="reference internal" href="topology_radiomics.html#topology_radiomics.morphology_features.Isosurface" title="topology_radiomics.morphology_features.Isosurface">topology_radiomics.morphology_features.Isosurface</a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#topology_radiomics.morphology_features.MorphologyFeatures" title="Permalink to this definition">¶</a></dt>
+<dd><p>Datam to hold Morphology Features</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="topology_radiomics.sanitization.BinaryVoxelMask">
+<em class="property">class </em><code class="sig-prename descclassname">topology_radiomics.sanitization.</code><code class="sig-name descname">BinaryVoxelMask</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mri_volume</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em><span class="sig-paren">)</span><a class="headerlink" href="#topology_radiomics.sanitization.BinaryVoxelMask" title="Permalink to this definition">¶</a></dt>
+<dd><p>A validated voxel mask that can be used for computing surface measures.</p>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="index.html" class="btn btn-neutral float-left" title="Getting started guide" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Toth Techonologies
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
