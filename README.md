@@ -16,6 +16,8 @@ Ismail, M., Hill, V., Statsevych, V., Huang, R., Prasanna, P., Correa, R., Singh
 
 You can find our package on pypi
 
+Python version = <b>3.8</b>
+
 Run the below command to install the package:
 
 ```
