@@ -67,6 +67,8 @@ Tutorial Notebooks:
 
 The notebooks can be viewed by opening the browser and visting the url http://localhost:3000
 
+**Note:** topology_radiomics clips outliers a per lesion basis. See the tutorials for more information.
+
 
 # Contribution Guide:
 
