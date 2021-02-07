@@ -1,6 +1,6 @@
 # Overview
 
-Topology descriptors are designed to capture subtle sharpness and curvature differences along the surface of diseased pathologies on imaging. 
+Topology descriptors are designed to capture subtle sharpness and curvature differences along the surface of diseased pathologies on imaging.
 
 These are based on the hypothesis that local structural changes through infiltration and disruption of disease in a region is likely to cause shape irregularities and in turn, resulting in changes along the surface of the lesion.
 
@@ -15,8 +15,6 @@ Ismail, M., Hill, V., Statsevych, V., Huang, R., Prasanna, P., Correa, R., Singh
 ## Installing using pip
 
 You can find our package on pypi
-
-Python version = <b>3.8</b>
 
 Run the below command to install the package:
 
@@ -69,6 +67,8 @@ Tutorial Notebooks:
 
 The notebooks can be viewed by opening the browser and visting the url http://localhost:3000
 
+**Note:** topology_radiomics clips outliers a per lesion basis. See the tutorials for more information.
+
 
 # Contribution Guide:
 
@@ -83,3 +83,19 @@ Please submit bugs and features to our github page.
 Create a issue on our board.
 Create a pull request with your changes. Tag your changes with the issue number (commit message should have issue number).
 Someone from the team will review your request and merge your changes for the next release.
+
+# Characteristics of Curvature
+
+The topology of surfaces in imaging can be quantified with gaussian curvature and mean curvature. The following 4 surface measures are derived from the gaussian and mean curvatures:
+- Curvedness
+- Shape Index
+- Sharpness
+- Total Curvature
+
+The figure below highlights characteristics of the gaussian and mean curvatures, as well as some of the surface measures.
+
+<a href='https://www.researchgate.net/publication/307303825_Heritability_maps_of_human_face_morphology_through_large-scale_automated_three-dimensional_phenotyping'>![Characteristics of Curvatures](images/Characteristics_of_curvature.png)</a>
+
+This figure was adapted from:
+
+<div align='center'>Tsagkrasoulis, Dimosthenis & Hysi, Pirro & Spector, Tim & Montana, Giovanni. (2016). Heritability maps of human face morphology through large-scale automated three-dimensional phenotyping. Scientific Reports. 7. 10.1038/srep45885.</div>
