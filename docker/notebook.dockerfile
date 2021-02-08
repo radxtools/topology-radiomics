@@ -1,5 +1,5 @@
 # set base image (host OS)
-FROM python:3.8
+FROM python:3.6
 
 # install graphics libs
 RUN apt-get update && apt-get install -y libglu1-mesa-dev freeglut3-dev mesa-common-dev
