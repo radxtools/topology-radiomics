@@ -67,7 +67,7 @@ setup(
         "pandas",
         "sphinx",
     ],
-    python_requires='>=3.8',
+    python_requires='>=3.6',
     keywords='Topology Radiomics',
     command_options={
         'build_sphinx': {
