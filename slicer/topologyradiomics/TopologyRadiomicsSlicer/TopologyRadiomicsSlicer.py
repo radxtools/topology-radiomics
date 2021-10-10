@@ -36,14 +36,14 @@ class TopologyRadiomicsSlicer(ScriptedLoadableModule):
     self.parent.dependencies = []
     self.parent.contributors = ["BriC Lab (Case Western University)"]
     self.parent.helpText = """
-TODO
-"""   # TODO
+TopologyRadiomics captures subtle sharpness and curvature differences along the surface of diseased pathologies on imaging.
+"""
     self.parent.helpText += self.getDefaultModuleDocumentationLink()
     self.parent.acknowledgementText = """
 If you make use of this implementation, please cite the following paper:
 
-TODO
-"""   # TODO
+Ismail, M., Hill, V., Statsevych, V., Huang, R., Prasanna, P., Correa, R., Singh, G., Bera, K., Beig, N., Thawani, R. Madabhushi, A., Aahluwalia, M, and Tiwari, P., "Shape features of the lesion habitat to differentiate brain tumor progression from pseudoprogression on routine multiparametric MRI: a multisite study". American Journal of Neuroradiology, 2018, 39(12), pp.2187-2193.
+"""
 
 #
 # TopologyRadiomicsSlicerWidget
@@ -109,8 +109,6 @@ class TopologyRadiomicsSlicerWidget(ScriptedLoadableModuleWidget, VTKObservation
     Adds observers to the selected parameter node. Observation is needed because when the
     parameter node is changed then the GUI must be updated immediately.
     """
-    print('setParameterNode: %s -> %s' % (self.parameterNode and self.parameterNode.GetName(), inputParameterNode and inputParameterNode.GetName()))    # TODO: remove
-
     if inputParameterNode == self.parameterNode:
       return
     
@@ -126,11 +124,7 @@ class TopologyRadiomicsSlicerWidget(ScriptedLoadableModuleWidget, VTKObservation
 
     self.updateGuiFromParameterNode()
 
-  def dump(self, node):    # TODO: remove
-    return None if node is None else {n: node.GetParameter(n) for n in node.GetParameterNames()}
-
   def updateGuiState(self):
-    print('updateGuiState: %s %s' % (self.parameterNode and self.parameterNode.GetName(), self.dump(self.parameterNode)))    # TODO: remove
     if self.parameterNode is None:
       return
     if self.parameterNode.GetNodeReference("Input"):
@@ -145,7 +139,6 @@ class TopologyRadiomicsSlicerWidget(ScriptedLoadableModuleWidget, VTKObservation
     This method is called whenever parameter node is changed.
     The module GUI is updated to show the current state of the parameter node.
     """
-    print('updateGUIFromParameterNode: %s %s' % (self.parameterNode and self.parameterNode.GetName(), self.dump(self.parameterNode)))    # TODO: remove
     if self.parameterNode is None:
       return
 
@@ -206,9 +199,6 @@ class TopologyRadiomicsSlicerWidget(ScriptedLoadableModuleWidget, VTKObservation
     This method is called when the user makes any change in the GUI.
     The changes are saved into the parameter node (so that they are restored when the scene is saved and loaded).
     """
-
-    print('updateParameterNodeFromGUI: %s %s' % (self.parameterNode and self.parameterNode.GetName(), self.dump(self.parameterNode)))    # TODO: remove
-
     if self.parameterNode is None:
       return
 
@@ -326,8 +316,6 @@ class TopologyRadiomicsSlicerLogic(ScriptedLoadableModuleLogic):
 
     origin, spacing = np.asarray(origin), np.asarray(spacing)
 
-    print('spacing: %s, voxel_spacing: %s' % (spacing, config.voxel_spacing))
-
     if padding is None:
       # without padding, our surface might hit the border of the bounding box / array after smoothing
       padding = math.ceil(config.gaussian_sigma * config.gaussian_iterations)
@@ -350,7 +338,8 @@ class TopologyRadiomicsSlicerLogic(ScriptedLoadableModuleLogic):
     if name is not None:
       model_node.SetName(name)
 
-    # add different surface measures, which color the surface; they can be selected in the `Scalars` the `Models` module
+    # add different surface measures, which color the surface; they can be selected in the `Scalars` section
+    # of the `Models` module
     MEASURES = ['shape_index', 'curvedness', 'sharpness', 'total_curvature']
     for measure in MEASURES:
       vtk_array = vtk.util.numpy_support.numpy_to_vtk(getattr(result.surface_measures, measure))

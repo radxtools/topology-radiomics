@@ -6,9 +6,9 @@ project(TopologyRadiomics)
 # Extension meta-information
 set(EXTENSION_HOMEPAGE "https://github.com/radxtools/topology-radiomics/tree/master/slicer/topologyradiomics")
 set(EXTENSION_CATEGORY "Informatics")
-set(EXTENSION_CONTRIBUTORS "Unknown Unknown (Unknown)")
-set(EXTENSION_DESCRIPTION "The TopologyRadiomics is being developed.")
-set(EXTENSION_ICONURL "TopologyRadiomicsSlicer/Resources/Icons/TopologyRadiomicsSlicer.png")
+set(EXTENSION_CONTRIBUTORS "Pallavi Tiwari (BriC), Satish Viswanath (BriC), Rob Toth (Toth Technology), Nathan Hillyer (Toth Technology), Tom Primozic")
+set(EXTENSION_DESCRIPTION "The TopologyRadiomics extension provides a 3D Slicer interface to the topology_radiomics library. topology_radiomics is an open-source Python package for capturing subtle sharpness and curvature differences along the surface of diseased pathologies on imaging.")
+set(EXTENSION_ICONURL "https://github.com/radxtools/topology-radiomics/raw/master/slicer/topologyradiomics/TopologyRadiomicsSlicer/Resources/Icons/TopologyRadiomicsSlicer.png")
 set(EXTENSION_SCREENSHOTURLS "https://github.com/radxtools/topology-radiomics/raw/master/slicer/topologyradiomics/TopologyRadiomicsSlicer/Screenshot.jpg")
 set(EXTENSION_DEPENDS "NA") # Specified as a list or "NA" if no dependencies
 
