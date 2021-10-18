@@ -166,104 +166,15 @@
         </property>
        </widget>
       </item>
-      <!-- Voxel spacing -->
-      <item row="2" column="0" colspan="2">
-       <widget class="QLabel" name="label_voxel_spacing">
-        <property name="text">
-         <string>Voxel spacing</string>
-        </property>
-       </widget>
-      </item>
-      <!-- Voxel spacing X -->
-      <item row="3" column="0">
-       <widget class="QLabel" name="label_voxel_spacing_x">
-        <property name="text">
-         <string>X</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="1">
-       <widget class="ctkSliderWidget" name="spacingXSlider">
-        <property name="decimals">
-         <number>2</number>
-        </property>
-        <property name="minimum">
-         <double>0</double>
-        </property>
-        <property name="maximum">
-         <double>100</double>
-        </property>
-        <property name="pageStep">
-         <double>1</double>
-        </property>
-        <property name="singleStep">
-         <double>0.1</double>
-        </property>
-       </widget>
-      </item>
-      <!-- Voxel spacing Y -->
-      <item row="4" column="0">
-       <widget class="QLabel" name="label_voxel_spacing_y">
-        <property name="text">
-         <string>Y</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="1">
-       <widget class="ctkSliderWidget" name="spacingYSlider">
-        <property name="decimals">
-         <number>2</number>
-        </property>
-        <property name="minimum">
-         <double>0</double>
-        </property>
-        <property name="maximum">
-         <double>100</double>
-        </property>
-        <property name="pageStep">
-         <double>1</double>
-        </property>
-        <property name="singleStep">
-         <double>0.1</double>
-        </property>
-       </widget>
-      </item>
-      <!-- Voxel spacing Z -->
-      <item row="5" column="0">
-       <widget class="QLabel" name="label_voxel_spacing_z">
-        <property name="text">
-         <string>Z</string>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="1">
-       <widget class="ctkSliderWidget" name="spacingZSlider">
-        <property name="decimals">
-         <number>2</number>
-        </property>
-        <property name="minimum">
-         <double>0</double>
-        </property>
-        <property name="maximum">
-         <double>100</double>
-        </property>
-        <property name="pageStep">
-         <double>1</double>
-        </property>
-        <property name="singleStep">
-         <double>0.1</double>
-        </property>
-       </widget>
-      </item>
       <!-- Marching Cubes Algorithm -->
-      <item row="6" column="0">
+      <item row="2" column="0">
        <widget class="QLabel" name="label_marching_cubes_algorithm">
         <property name="text">
          <string>Marching Cubes Algorithm</string>
         </property>
        </widget>
       </item>
-      <item row="6" column="1">
+      <item row="2" column="1">
        <widget class="ctkComboBox" name="algorithmComboBox">
         <property name="editable">
          <bool>false</bool>
@@ -284,14 +195,14 @@
        </widget>
       </item>
       <!-- Marching Cubes step size -->
-      <item row="7" column="0">
+      <item row="3" column="0">
        <widget class="QLabel" name="label_marching_cubes_step_size">
         <property name="text">
          <string>Marching Cubes step size</string>
         </property>
        </widget>
       </item>
-      <item row="7" column="1">
+      <item row="3" column="1">
        <widget class="ctkSliderWidget" name="stepSizeSlider">
         <property name="decimals">
          <number>0</number>
@@ -311,14 +222,14 @@
        </widget>
       </item>
       <!-- Clip percent -->
-      <item row="8" column="0">
+      <item row="4" column="0">
        <widget class="QLabel" name="label_clip">
         <property name="text">
          <string>Clip percent</string>
         </property>
        </widget>
       </item>
-      <item row="8" column="1">
+      <item row="4" column="1">
        <widget class="ctkSliderWidget" name="clipSlider">
         <property name="decimals">
          <number>2</number>

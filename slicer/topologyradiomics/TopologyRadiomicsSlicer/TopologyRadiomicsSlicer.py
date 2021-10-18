@@ -81,9 +81,6 @@ class TopologyRadiomicsSlicerWidget(ScriptedLoadableModuleWidget, VTKObservation
     self.ui.iterSlider.connect('valueChanged(double)', self.updateParameterNodeFromGui)
     self.ui.sigmaSlider.connect('valueChanged(double)', self.updateParameterNodeFromGui)
 
-    self.ui.spacingXSlider.connect('valueChanged(double)', self.updateParameterNodeFromGui)
-    self.ui.spacingYSlider.connect('valueChanged(double)', self.updateParameterNodeFromGui)
-    self.ui.spacingZSlider.connect('valueChanged(double)', self.updateParameterNodeFromGui)
     self.ui.algorithmComboBox.connect('currentIndexChanged(int)', self.updateParameterNodeFromGui)
     self.ui.stepSizeSlider.connect('valueChanged(double)', self.updateParameterNodeFromGui)
     self.ui.clipSlider.connect('valueChanged(double)', self.updateParameterNodeFromGui)
@@ -168,18 +165,6 @@ class TopologyRadiomicsSlicerWidget(ScriptedLoadableModuleWidget, VTKObservation
     self.ui.iterSlider.setValue(get_int('GaussianIterations', default_config.gaussian_iterations))
     self.ui.iterSlider.blockSignals(wasBlocked)
 
-    wasBlocked = self.ui.spacingXSlider.blockSignals(True)
-    self.ui.spacingXSlider.setValue(get_float('VoxelSpacingX', default_config.voxel_spacing[0]))
-    self.ui.spacingXSlider.blockSignals(wasBlocked)
-
-    wasBlocked = self.ui.spacingYSlider.blockSignals(True)
-    self.ui.spacingYSlider.setValue(get_float('VoxelSpacingY', default_config.voxel_spacing[1]))
-    self.ui.spacingYSlider.blockSignals(wasBlocked)
-
-    wasBlocked = self.ui.spacingZSlider.blockSignals(True)
-    self.ui.spacingZSlider.setValue(get_float('VoxelSpacingZ', default_config.voxel_spacing[2]))
-    self.ui.spacingZSlider.blockSignals(wasBlocked)
-
     wasBlocked = self.ui.algorithmComboBox.blockSignals(True)
     self.ui.algorithmComboBox.setCurrentIndex(self.ui.algorithmComboBox.findText(self.parameterNode.GetParameter("MarchingCubesAlgorithm") or default_config.marching_cubes_algorithm.name))
     self.ui.algorithmComboBox.blockSignals(wasBlocked)
@@ -206,9 +191,6 @@ class TopologyRadiomicsSlicerWidget(ScriptedLoadableModuleWidget, VTKObservation
       self.parameterNode.SetNodeReferenceID("Input", self.ui.inputSelector.currentNodeID)
       self.parameterNode.SetParameter('GaussianSigma', str(self.ui.sigmaSlider.value))
       self.parameterNode.SetParameter('GaussianIterations', str(int(self.ui.iterSlider.value)))
-      self.parameterNode.SetParameter('VoxelSpacingX', str(self.ui.spacingXSlider.value))
-      self.parameterNode.SetParameter('VoxelSpacingY', str(self.ui.spacingYSlider.value))
-      self.parameterNode.SetParameter('VoxelSpacingZ', str(self.ui.spacingZSlider.value))
       self.parameterNode.SetParameter('MarchingCubesAlgorithm', self.ui.algorithmComboBox.currentText)
       self.parameterNode.SetParameter('MarchingCubesStepSize', str(int(self.ui.stepSizeSlider.value)))
       self.parameterNode.SetParameter('ClipPercent', str(self.ui.clipSlider.value))
@@ -223,7 +205,6 @@ class TopologyRadiomicsSlicerWidget(ScriptedLoadableModuleWidget, VTKObservation
     config = MorphologyConfig()
     config.gaussian_sigma = self.ui.sigmaSlider.value
     config.gaussian_iterations = int(self.ui.iterSlider.value)
-    config.voxel_spacing = (self.ui.spacingXSlider.value, self.ui.spacingYSlider.value, self.ui.spacingZSlider.value)
     config.marching_cubes_algorithm = getattr(MarchingCubesAlgorithm, self.ui.algorithmComboBox.currentText, None) or config.marching_cubes_algorithm
     config.marching_cubes_step_size = int(self.ui.stepSizeSlider.value)
     config.clip_percent = self.ui.clipSlider.value
@@ -262,9 +243,6 @@ class TopologyRadiomicsSlicerLogic(ScriptedLoadableModuleLogic):
     default_config = MorphologyConfig()
     node.SetParameter('GaussianSigma', str(default_config.gaussian_sigma))
     node.SetParameter('GaussianIterations', str(default_config.gaussian_iterations))
-    node.SetParameter('VoxelSpacingX', str(default_config.voxel_spacing[0]))
-    node.SetParameter('VoxelSpacingY', str(default_config.voxel_spacing[1]))
-    node.SetParameter('VoxelSpacingZ', str(default_config.voxel_spacing[2]))
     node.SetParameter('MarchingCubesAlgorithm', default_config.marching_cubes_algorithm.name)
     node.SetParameter('MarchingCubesStepSize', str(default_config.marching_cubes_step_size))
     node.SetParameter('ClipPercent', str(default_config.clip_percent))
@@ -314,6 +292,7 @@ class TopologyRadiomicsSlicerLogic(ScriptedLoadableModuleLogic):
     if config is None:
       config = MorphologyConfig()
 
+    config.voxel_spacing = tuple(reversed(spacing))
     origin, spacing = np.asarray(origin), np.asarray(spacing)
 
     if padding is None:
@@ -331,7 +310,7 @@ class TopologyRadiomicsSlicerLogic(ScriptedLoadableModuleLogic):
     # match the original model/segment!)
     faces = result.isosurface.faces
     verts = result.isosurface.verts
-    verts = verts[:, [2, 1, 0]] * (spacing * directions) / np.array(list(reversed(config.voxel_spacing))) + origin
+    verts = verts[:, [2, 1, 0]] * directions + origin
     poly_faces = np.column_stack([3 * np.ones((faces.shape[0], 1), dtype=np.int), faces])
     polydata = pv.PolyData(verts, poly_faces.flatten())
     model_node = slicer.modules.models.logic().AddModel(polydata)

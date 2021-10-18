@@ -31,7 +31,7 @@ _[Back to **Table of Contents**](#table-of-contents)_
 
 Here is a complete demonstration of loading sample data into Slicer, segmenting a tumor, visualizing the output, and saving it to a file.
 
-**TODO**
+[![Collage Demonstration](Tutorials/TopologyRadiomicsFullDemo.png?raw=true)](https://youtu.be/-we5zZ7MVRU "Topology Radiomics Full Demo")
 
 To load the surface in Python and visualize it, use the code below:
 
