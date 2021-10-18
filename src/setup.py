@@ -19,6 +19,7 @@ def compute_version():
     dd = now.day
     version = f"{yy}.{mm}.{dd}"
     version = (Path(__file__).parent / "version.txt").open().read()
+    version = version.strip()
 
     if os.environ.get('GITHUB_RUN_NUMBER'):
         run_number = os.environ.get('GITHUB_RUN_NUMBER')
@@ -67,7 +68,7 @@ setup(
         "pandas",
         "sphinx",
     ],
-    python_requires='>=3.8',
+    python_requires='>=3.6',
     keywords='Topology Radiomics',
     command_options={
         'build_sphinx': {
