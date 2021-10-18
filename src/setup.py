@@ -27,8 +27,7 @@ def compute_version():
         ref = os.environ.get('GITHUB_REF')
         if ref:
             ref = ref.strip()
-            branch_name = ref.split("/")[-1]
-            if branch_name != "master":
+            if not ref.startswith('refs/tags/'):
                 version = f"{version}.dev{run_number}"
     return version
 
