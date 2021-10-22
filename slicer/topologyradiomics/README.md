@@ -9,6 +9,7 @@ These are based on the hypothesis that local structural changes through infiltra
 # Table of Contents
 - [Slicer](#slicer)
   - [Overview](#overview)
+- [Installation](#installation)
 - [Tutorial](#tutorial)
 - [Contact](#contact)
 - [References](#references)
@@ -25,6 +26,28 @@ _[Back to **Table of Contents**](#table-of-contents)_
 The general operational flow for using the Slicer extension is to load a 3D image, segment a relavent portion, configure the parameters, and run the algorithm.
 
 Once this is completed, the user can take the output model(s) and visualize them within Slicer. Slicer also supports exporting in various formats, e.g. `.vtk`, which can then be loaded by the Python package `pyvista`.
+
+# Installation
+
+The _TopologyRadiomics Slicer Extension_ is not yet available in the _Slicer Extensions Catalog_, so you have to manually install it from GitHub to use it.
+
+### Installing
+
+1. Go to [TopologyRadiomics repository on GitHub](https://github.com/radxtools/topology-radiomics/tree/top_rad_slicer_dev_tom), click **Code** (green button) and then **Download ZIP**.
+2. Unzip the downloaded file, e.g. to `/Users/user/Downloads/topology-radiomics`.
+3. In _Slicer_, click on menu `Edit > Application Settings`, section `Modules`, and click the `>>` button next to text box _Additional module paths:_
+4. Click **Add** and find the `slicer/topologyradiomics/TopologyRadiomicsSlicer` folder contained in the repository you downloaded. The final path will be e.g.
+    ```
+    /Users/user/Downloads/topology-radiomics/slicer/topologyradiomics/TopologyRadiomicsSlicer
+    ```
+5. Click **OK** and restart _Slicer_. The _TopologyRadiomics Slicer Extension_ should be available in the extension menu _Informatics_.
+
+### Uninstalling
+
+1. To uninstall the _TopologyRadiomics Slicer Extension_, click on menu `Edit > Application Settings`, section `Modules`.
+2. In the text box _Additional module paths:_ select the path to `TopologyRadiomicsSlicer` folder.
+3. Click the `>>` button next to text box and click **Remove**.
+4. Click **OK** and restart _Slicer_.
 
 # Tutorial
 _[Back to **Table of Contents**](#table-of-contents)_

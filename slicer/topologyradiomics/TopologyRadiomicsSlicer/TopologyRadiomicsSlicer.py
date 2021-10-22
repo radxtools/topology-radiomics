@@ -8,13 +8,11 @@ import pyvista as pv
 from slicer.util import VTKObservationMixin
 from slicer.ScriptedLoadableModule import ScriptedLoadableModule, ScriptedLoadableModuleWidget, ScriptedLoadableModuleLogic, ScriptedLoadableModuleTest
 
-# try:
-#   import topology_radiomics
-# except ImportError:
-#   slicer.util.pip_install('topology_radiomics')
-
-import sys
-sys.path.insert(0, '/Users/tom/my/code/slicer/topology-radiomics/src/')
+try:
+  import topology_radiomics
+except ImportError:
+  slicer.util.pip_install('sphinx')
+  slicer.util.pip_install('topology_radiomics')
 
 from topology_radiomics.config import MarchingCubesAlgorithm
 from topology_radiomics import MorphologyConfig, compute_morphology_features, convert_volume_into_mask
