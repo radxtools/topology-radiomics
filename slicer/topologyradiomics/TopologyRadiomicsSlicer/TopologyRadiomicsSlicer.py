@@ -4,7 +4,6 @@ from typing import Union
 import vtk
 import slicer
 import numpy as np
-import pyvista as pv
 from slicer.util import VTKObservationMixin
 from slicer.ScriptedLoadableModule import ScriptedLoadableModule, ScriptedLoadableModuleWidget, ScriptedLoadableModuleLogic, ScriptedLoadableModuleTest
 
@@ -13,6 +12,8 @@ try:
 except ImportError:
   slicer.util.pip_install('sphinx')
   slicer.util.pip_install('topology_radiomics')
+
+import pyvista as pv
 
 from topology_radiomics.config import MarchingCubesAlgorithm
 from topology_radiomics import MorphologyConfig, compute_morphology_features, convert_volume_into_mask
