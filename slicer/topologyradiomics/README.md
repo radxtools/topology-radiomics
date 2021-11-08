@@ -67,7 +67,7 @@ assert (faces[:, 0] == 3).all()
 plotly_3d_meshes = [
   go.Mesh3d(x=surface.points[:, 0], y=surface.points[:, 1], z=surface.points[:, 2],
             i=faces[:, 1], j=faces[:, 2], k=faces[:, 3],
-            intensity=surface.point_data[measure], showlegend=True, name=measure)
+            intensity=surface.point_arrays[measure], showlegend=True, name=measure)
   for measure in ['curvedness', 'shape_index', 'sharpness', 'total_curvature']
 ]
 fig = go.Figure(data=plotly_3d_meshes,
