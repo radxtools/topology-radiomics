@@ -266,16 +266,15 @@ class TopologyRadiomicsSlicerLogic(ScriptedLoadableModuleLogic):
     spacing = labelmap_volume_node.GetSpacing()
     directions = np.zeros((3, 3))
     labelmap_volume_node.GetIJKToRASDirections(directions)
-    directions = np.diag(directions)
     transform_matrix = np.zeros((4, 4))
-    transform_matrix[:3, :3] = np.diag(spacing * directions)
+    transform_matrix[:3, :3] = spacing * directions
     transform_matrix[:3, 3] = origin
     transform_matrix[3, 3] = 1
 
     ijk_to_ras = vtk.vtkMatrix4x4()
     labelmap_volume_node.GetIJKToRASMatrix(ijk_to_ras)
     matrix = slicer.util.arrayFromVTKMatrix(ijk_to_ras)
-    assert np.array_equiv(matrix, transform_matrix), 'unexpected transformation matrix:\n%s' % matrix
+    assert np.allclose(matrix, transform_matrix), 'unexpected transformation matrix:\n%s' % matrix
 
     image = labelmap_volume_node.GetImageData()
     shape = tuple(reversed(image.GetDimensions()))
@@ -301,7 +300,7 @@ class TopologyRadiomicsSlicerLogic(ScriptedLoadableModuleLogic):
       padded = np.zeros([mask.shape[0] + 2 * padding, mask.shape[1] + 2 * padding, mask.shape[2] + 2 * padding])
       padded[padding:-padding, padding:-padding, padding:-padding] = mask
       mask = padded
-      origin -= spacing * directions * padding
+      origin -= directions @ spacing * padding
     mask = convert_volume_into_mask(mask, merge_labels=[1])
 
     result = compute_morphology_features(mask, config)
@@ -309,7 +308,7 @@ class TopologyRadiomicsSlicerLogic(ScriptedLoadableModuleLogic):
     # match the original model/segment!)
     faces = result.isosurface.faces
     verts = result.isosurface.verts
-    verts = verts[:, [2, 1, 0]] * directions + origin
+    verts = verts[:, [2, 1, 0]] @ directions.T + origin
     poly_faces = np.column_stack([3 * np.ones((faces.shape[0], 1), dtype=np.int), faces])
     polydata = pv.PolyData(verts, poly_faces.flatten())
     model_node = slicer.modules.models.logic().AddModel(polydata)
